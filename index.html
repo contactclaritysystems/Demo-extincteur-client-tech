@@ -629,6 +629,23 @@ textarea:focus { border-color: var(--accent); }
   color: var(--label3);
   font-weight: 600;
 }
+
+  .logout-btn {
+  border: none;
+  background: rgba(9,9,14,0.06);
+  color: var(--label2);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s ease;
+}
+
+.logout-btn:active {
+  transform: scale(.96);
+}
   
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -690,9 +707,16 @@ textarea:focus { border-color: var(--accent); }
   <div id="app" style="display:none;">
 
     <div class="hdr" id="mainHeader">
-      <img src="https://i.imgur.com/1ZFTLIo.png" class="logo" alt="Clarity Systems">
-      <span class="badge" id="badge"></span>
-    </div>
+  <img src="https://i.imgur.com/1ZFTLIo.png" class="logo" alt="Clarity Systems">
+
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="badge" id="badge"></span>
+
+    <button onclick="logout()" class="logout-btn">
+      Déconnexion
+    </button>
+  </div>
+</div>
 
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="today">Aujourd'hui</div>
