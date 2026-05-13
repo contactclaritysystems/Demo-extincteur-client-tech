@@ -561,6 +561,75 @@ textarea {
 
 textarea:focus { border-color: var(--accent); }
 
+.login-screen {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.login-card {
+  width: 100%;
+  background: var(--surface-solid);
+  border-radius: var(--radius-lg);
+  padding: 30px 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255,255,255,0.8);
+  text-align: center;
+  animation: cardIn .35s ease both;
+}
+
+.login-logo {
+  height: 74px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--label);
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label3);
+  margin-bottom: 22px;
+}
+
+.login-input {
+  width: 100%;
+  border: 1.5px solid var(--sep);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--bg);
+  outline: none;
+  color: var(--label);
+}
+
+.login-input:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.login-demo {
+  margin-top: 18px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--label3);
+  font-weight: 600;
+}
+  
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -600,7 +669,25 @@ textarea:focus { border-color: var(--accent); }
 
 <body>
 <div id="wrap">
-  <div id="app">
+  <div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <img src="https://i.imgur.com/1ZFTLIo.png" class="login-logo" alt="Clarity Systems">
+
+    <div class="login-title">Connexion</div>
+    <div class="login-sub">Accédez à votre espace sécurisé</div>
+
+    <input id="loginEmail" class="login-input" type="email" placeholder="Email">
+    <input id="loginPassword" class="login-input" type="password" placeholder="Mot de passe">
+
+    <button class="primary-btn" onclick="loginDemo()">Se connecter</button>
+
+    <div class="login-demo">
+      Démo technicien : tech@demo.fr / 1234<br>
+      Démo client : client@demo.fr / 1234
+    </div>
+  </div>
+</div>
+  <div id="app" style="display:none;">
 
     <div class="hdr" id="mainHeader">
       <img src="https://i.imgur.com/1ZFTLIo.png" class="logo" alt="Clarity Systems">
@@ -1077,7 +1164,95 @@ function safe(v) {
   return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-loadData();
+function loginDemo() {
+  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if (email === "tech@demo.fr" && password === "1234") {
+    localStorage.setItem("demoRole", "technicien");
+    startApp("technicien");
+    return;
+  }
+
+  if (email === "client@demo.fr" && password === "1234") {
+    localStorage.setItem("demoRole", "client");
+    startApp("client");
+    return;
+  }
+
+  toast("Identifiants incorrects");
+}
+
+function startApp(role) {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+
+  if (role === "technicien") {
+    showMainBars();
+    loadData();
+  }
+
+  if (role === "client") {
+    hideMainBars();
+    renderClientDemoHome();
+  }
+}
+
+function logout() {
+  localStorage.removeItem("demoRole");
+  selectedItem = null;
+  document.getElementById("app").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+}
+
+function renderClientDemoHome() {
+  document.getElementById("content").innerHTML = `
+    <div class="detail-top">
+      <div class="detail-title">Espace client</div>
+      <div class="detail-sub">Démonstration</div>
+    </div>
+
+    <div class="main-intervention">
+      <div class="icon">🏢</div>
+      <div class="info">
+        <div class="main-title">STIM</div>
+        <div class="main-line">Bienvenue dans votre espace client sécurisé.</div>
+        <div class="main-line">Documents, rapports, registre et abonnements seront regroupés ici.</div>
+      </div>
+    </div>
+
+    <div class="action-grid">
+      <button class="action" onclick="toast('Documents bientôt disponibles')">
+        <div class="action-ico">📄</div><span>Documents</span>
+      </button>
+      <button class="action" onclick="toast('Rapports bientôt disponibles')">
+        <div class="action-ico">📋</div><span>Rapports</span>
+      </button>
+      <button class="action" onclick="toast('Registre bientôt disponible')">
+        <div class="action-ico">📚</div><span>Registre</span>
+      </button>
+      <button class="action" onclick="toast('Abonnements bientôt disponibles')">
+        <div class="action-ico">💳</div><span>Abonnements</span>
+      </button>
+      <button class="action" onclick="toast('Vérifications bientôt disponibles')">
+        <div class="action-ico">📅</div><span>Échéances</span>
+      </button>
+      <button class="action" onclick="toast('Rendez-vous bientôt disponible')">
+        <div class="action-ico">🕒</div><span>Rendez-vous</span>
+      </button>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="danger-btn" onclick="logout()">Déconnexion</button>
+    </div>
+  `;
+}
+
+const savedRole = localStorage.getItem("demoRole");
+
+if (savedRole) {
+  startApp(savedRole);
+}
 </script>
 </body>
 </html>
