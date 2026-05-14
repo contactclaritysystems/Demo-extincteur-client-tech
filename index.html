@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -284,7 +283,6 @@ textarea:focus { border-color:var(--accent); }
 .card:nth-child(1){animation-delay:.03s}.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.09s}.card:nth-child(4){animation-delay:.12s}.card:nth-child(5){animation-delay:.15s}
 .action:nth-child(1){animation-delay:.05s}.action:nth-child(2){animation-delay:.09s}.action:nth-child(3){animation-delay:.13s}.action:nth-child(4){animation-delay:.17s}.action:nth-child(5){animation-delay:.21s}.action:nth-child(6){animation-delay:.25s}
 </style>
-
 </head>
 
 <body>
@@ -602,330 +600,482 @@ function renderReportStep() {
         <div class="detail-sub">Optionnel</div>
       </div>
       <textarea id="comment" placeholder="Exemple : RAS, accès impossible, remplacement conseillé…"></textarea>
-
-```
-  <div class="bottom-actions">
-    <button class="primary-btn" onclick="saveReportLine()">Ajouter au rapport</button>
-  </div>`;
-```
-
-}
+      <div class="bottom-actions">
+        <button class="primary-btn" onclick="saveReportLine()">Ajouter au rapport</button>
+      </div>`;
+  }
 }
 function renderChoiceStep(title, options, key) {
-document.getElementById(“content”).innerHTML = `<div class="detail-top"> <div class="back" onclick="backReportStep()">Retour</div> <div class="detail-title">${title}</div> </div> <div class="action-grid"> ${options.map(o =>`
-<button class="action" onclick="selectReportValue('${key}','${escapeJs(o)}')">
-<span style="font-size:13px;color:var(--label);font-weight:700">${safe(o)}</span>
-</button>
-`).join("")} </div>`;
+  document.getElementById("content").innerHTML = `
+    <div class="detail-top">
+      <div class="back" onclick="backReportStep()">Retour</div>
+      <div class="detail-title">${title}</div>
+    </div>
+    <div class="action-grid">
+      ${options.map(o => `
+        <button class="action" onclick="selectReportValue('${key}','${escapeJs(o)}')">
+          <span style="font-size:13px;color:var(--label);font-weight:700">${safe(o)}</span>
+        </button>
+      `).join("")}
+    </div>`;
 }
 function selectReportValue(key, value) { tempLine[key] = value; reportStep++; renderReportStep(); }
-function backReportStep() { if (reportStep <= 1) { openReportPage(); return; } reportStep–; renderReportStep(); }
+function backReportStep() { if (reportStep <= 1) { openReportPage(); return; } reportStep--; renderReportStep(); }
 function saveReportLine() {
-const id = selectedItem.id;
-if (!reportLinesById[id]) reportLinesById[id] = [];
-tempLine.commentaire = document.getElementById(“comment”).value || “”;
-reportLinesById[id].push({…tempLine});
-toast(“✅ Tâche ajoutée”);
-openReportPage();
+  const id = selectedItem.id;
+  if (!reportLinesById[id]) reportLinesById[id] = [];
+  tempLine.commentaire = document.getElementById("comment").value || "";
+  reportLinesById[id].push({...tempLine});
+  toast("✅ Tâche ajoutée");
+  openReportPage();
 }
 function removeReportLine(index) { const id = selectedItem.id; if (!reportLinesById[id]) return; reportLinesById[id].splice(index, 1); openReportPage(); }
 function closeReport() {
-const id = selectedItem.id;
-if (!(reportLinesById[id] || []).length) { toast(“Ajoutez au moins une tâche”); return; }
-reportClosedById[id] = true;
-toast(“✅ Rapport clôturé”);
-renderDetail(selectedItem);
+  const id = selectedItem.id;
+  if (!(reportLinesById[id] || []).length) { toast("Ajoutez au moins une tâche"); return; }
+  reportClosedById[id] = true;
+  toast("✅ Rapport clôturé");
+  renderDetail(selectedItem);
 }
 function tryCloseIntervention(id) {
-if (!reportClosedById[id]) { toast(“Veuillez clôturer le rapport avant”); return; }
-openCloseSheet(id, selectedItem.name || selectedItem.entreprise || “Client”);
+  if (!reportClosedById[id]) { toast("Veuillez clôturer le rapport avant"); return; }
+  openCloseSheet(id, selectedItem.name || selectedItem.entreprise || "Client");
 }
-function openCloseSheet(id, name) { pendingId = id; openSheet(name, “Clôturer cette intervention ?”,`<button class="sbtn confirm" onclick="confirmClose()">✓ Clôturer l'intervention</button>`); }
+function openCloseSheet(id, name) { pendingId = id; openSheet(name, "Clôturer cette intervention ?",`<button class="sbtn confirm" onclick="confirmClose()">✓ Clôturer l'intervention</button>`); }
 async function confirmClose() {
-try { await fetch(POST_URL, { method:“POST”, headers:{“Content-Type”:“application/json”}, body:JSON.stringify({ id:pendingId, rapport:reportLinesById[pendingId]||[] }) }); } catch {}
-closeSheet();
-toast(“✅ Intervention clôturée”);
-selectedItem = null;
-setTimeout(() => { showMainBars(); loadData(); }, 420);
+  try { await fetch(POST_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ id:pendingId, rapport:reportLinesById[pendingId]||[] }) }); } catch {}
+  closeSheet();
+  toast("✅ Intervention clôturée");
+  selectedItem = null;
+  setTimeout(() => { showMainBars(); loadData(); }, 420);
 }
-function openRescheduleSheet(id, name) { pendingId = id; openSheet(name, “Envoyer un lien de reprogrammation au client ?”,`<button class="sbtn confirm" onclick="fakeAction('reporter')">Envoyer le lien de RDV</button>`); }
-function openCancelSheet(id, name) { pendingId = id; openSheet(name, “Que voulez-vous faire ?”,`<button class="sbtn warn" onclick="fakeAction('annuler_reprogrammer')">Annuler et reprogrammer</button><button class="sbtn danger" onclick="fakeAction('annuler_definitif')">Annuler définitivement</button>`); }
+function openRescheduleSheet(id, name) { pendingId = id; openSheet(name, "Envoyer un lien de reprogrammation au client ?",`<button class="sbtn confirm" onclick="fakeAction('reporter')">Envoyer le lien de RDV</button>`); }
+function openCancelSheet(id, name) { pendingId = id; openSheet(name, "Que voulez-vous faire ?",`<button class="sbtn warn" onclick="fakeAction('annuler_reprogrammer')">Annuler et reprogrammer</button><button class="sbtn danger" onclick="fakeAction('annuler_definitif')">Annuler définitivement</button>`); }
 function fakeAction(action) {
-closeSheet();
-if (action === “reporter”) toast(“Lien de RDV bientôt connecté à Make”);
-if (action === “annuler_reprogrammer”) toast(“Annulation + reprogrammation bientôt connectées”);
-if (action === “annuler_definitif”) toast(“Annulation définitive bientôt connectée”);
+  closeSheet();
+  if (action === "reporter") toast("Lien de RDV bientôt connecté à Make");
+  if (action === "annuler_reprogrammer") toast("Annulation + reprogrammation bientôt connectées");
+  if (action === "annuler_definitif") toast("Annulation définitive bientôt connectée");
 }
 
 function openSheet(name, sub, buttonsHtml) {
-document.getElementById(“sname”).textContent = name;
-document.getElementById(“ssub”).textContent = sub;
-document.getElementById(“sheetButtons”).innerHTML = buttonsHtml;
-document.getElementById(“backdrop”).classList.add(“open”);
+  document.getElementById("sname").textContent = name;
+  document.getElementById("ssub").textContent = sub;
+  document.getElementById("sheetButtons").innerHTML = buttonsHtml;
+  document.getElementById("backdrop").classList.add("open");
 }
-function closeSheet() { document.getElementById(“backdrop”).classList.remove(“open”); document.getElementById(“sheetButtons”).innerHTML = “”; }
+function closeSheet() { document.getElementById("backdrop").classList.remove("open"); document.getElementById("sheetButtons").innerHTML = ""; }
 
 // ─── CLIENT DEMO ─────────────────────────────────────────────────────────────
 
-const CLIENT_NAME = “Ags-incendie”;
+const CLIENT_NAME = "Ags-incendie";
 
 const DEMO_DOCUMENTS = [
-{ ico:“📜”, name:“Contrat de maintenance”, date:“15 Jan 2025”, type:“PDF” },
-{ ico:“📋”, name:“Attestation vérification 2024”, date:“12 Nov 2024”, type:“PDF” },
-{ ico:“📄”, name:“Conditions générales”, date:“01 Jan 2024”, type:“PDF” },
-{ ico:“🔖”, name:“Bon de commande #2024-087”, date:“22 Oct 2024”, type:“PDF” },
+  { ico:"📜", name:"Contrat de maintenance", date:"15 Jan 2025", type:"PDF" },
+  { ico:"📋", name:"Attestation vérification 2024", date:"12 Nov 2024", type:"PDF" },
+  { ico:"📄", name:"Conditions générales", date:"01 Jan 2024", type:"PDF" },
+  { ico:"🔖", name:"Bon de commande #2024-087", date:"22 Oct 2024", type:"PDF" },
 ];
 
 const DEMO_RAPPORTS = [
-{ ico:“✅”, name:“Vérification extincteurs”, date:“12 Nov 2024”, tech:“Laurent M.”, statut:“ok” },
-{ ico:“✅”, name:“Contrôle BAES”, date:“03 Sep 2024”, tech:“Thomas R.”, statut:“ok” },
-{ ico:“⚠️”, name:“Maintenance alarme incendie”, date:“18 Juil 2024”, tech:“Laurent M.”, statut:“warn” },
+  { ico:"✅", name:"Vérification extincteurs", date:"12 Nov 2024", tech:"Laurent M.", statut:"ok" },
+  { ico:"✅", name:"Contrôle BAES", date:"03 Sep 2024", tech:"Thomas R.", statut:"ok" },
+  { ico:"⚠️", name:"Maintenance alarme incendie", date:"18 Juil 2024", tech:"Laurent M.", statut:"warn" },
 ];
 
 const DEMO_REGISTRE = [
-{ ico:“🧯”, name:“Extincteur CO₂ – Local technique”, serie:“EXT-001”, verif:“Avr 2025”, statut:“ok” },
-{ ico:“🧯”, name:“Extincteur poudre – Hall entrée”, serie:“EXT-002”, verif:“Avr 2025”, statut:“ok” },
-{ ico:“🧯”, name:“Extincteur eau – Bureau R+1”, serie:“EXT-003”, verif:“Avr 2025”, statut:“ok” },
-{ ico:“💡”, name:“BAES – Couloir RDC”, serie:“BAE-001”, verif:“Nov 2024”, statut:“warn” },
-{ ico:“💡”, name:“BAES – Escalier principal”, serie:“BAE-002”, verif:“Nov 2024”, statut:“warn” },
-{ ico:“🔔”, name:“Détecteur fumée – Cuisine”, serie:“DET-001”, verif:“Juil 2024”, statut:“danger” },
+  { ico:"🧯", name:"Extincteur CO₂ – Local technique", serie:"EXT-001", verif:"Avr 2025", statut:"ok" },
+  { ico:"🧯", name:"Extincteur poudre – Hall entrée", serie:"EXT-002", verif:"Avr 2025", statut:"ok" },
+  { ico:"🧯", name:"Extincteur eau – Bureau R+1", serie:"EXT-003", verif:"Avr 2025", statut:"ok" },
+  { ico:"💡", name:"BAES – Couloir RDC", serie:"BAE-001", verif:"Nov 2024", statut:"warn" },
+  { ico:"💡", name:"BAES – Escalier principal", serie:"BAE-002", verif:"Nov 2024", statut:"warn" },
+  { ico:"🔔", name:"Détecteur fumée – Cuisine", serie:"DET-001", verif:"Juil 2024", statut:"danger" },
 ];
 
 const DEMO_ECHEANCES = [
-{ ico:“🧯”, name:“Vérification extincteurs”, echeance:“Avr 2025”, jours:+45, statut:“ok” },
-{ ico:“💡”, name:“Contrôle BAES”, echeance:“Nov 2024”, jours:-185, statut:“danger” },
-{ ico:“🔔”, name:“Essai alarme incendie”, echeance:“Mar 2025”, jours:+20, statut:“warn” },
-{ ico:“📋”, name:“Registre de sécurité”, echeance:“Jan 2026”, jours:+260, statut:“ok” },
+  { ico:"🧯", name:"Vérification extincteurs", echeance:"Avr 2025", jours:+45, statut:"ok" },
+  { ico:"💡", name:"Contrôle BAES", echeance:"Nov 2024", jours:-185, statut:"danger" },
+  { ico:"🔔", name:"Essai alarme incendie", echeance:"Mar 2025", jours:+20, statut:"warn" },
+  { ico:"📋", name:"Registre de sécurité", echeance:"Jan 2026", jours:+260, statut:"ok" },
 ];
 
 const DEMO_INTERVENTIONS = [
-{ ico:“✅”, name:“Vérification annuelle extincteurs”, date:“12 Nov 2024”, tech:“Laurent M.”, adresse:“Marseille 13008”, statut:“Clôturée” },
-{ ico:“✅”, name:“Pose BAES supplémentaire”, date:“03 Sep 2024”, tech:“Thomas R.”, adresse:“Marseille 13008”, statut:“Clôturée” },
-{ ico:“✅”, name:“Contrôle alarme incendie”, date:“18 Juil 2024”, tech:“Laurent M.”, adresse:“Marseille 13008”, statut:“Clôturée” },
+  { ico:"✅", name:"Vérification annuelle extincteurs", date:"12 Nov 2024", tech:"Laurent M.", adresse:"Marseille 13008", statut:"Clôturée" },
+  { ico:"✅", name:"Pose BAES supplémentaire", date:"03 Sep 2024", tech:"Thomas R.", adresse:"Marseille 13008", statut:"Clôturée" },
+  { ico:"✅", name:"Contrôle alarme incendie", date:"18 Juil 2024", tech:"Laurent M.", adresse:"Marseille 13008", statut:"Clôturée" },
 ];
 
 function renderClientDemoHome() {
-hideMainBars();
-document.getElementById(“content”).innerHTML = ` <div class="detail-top"> <div class="detail-title">Espace client</div> <div class="detail-sub">Démonstration</div> </div> <div class="main-intervention"> <div class="icon">🏢</div> <div class="info"> <div class="main-title">${CLIENT_NAME}</div> <div class="main-line">Bienvenue dans votre espace client sécurisé.</div> <div class="main-line">Documents, rapports, registre et abonnements regroupés ici.</div> </div> </div> <div class="action-grid"> <button class="action" onclick="clientPage('documents')"> <div class="action-ico">📄</div><span>Documents</span> </button> <button class="action" onclick="clientPage('rapports')"> <div class="action-ico">📋</div><span>Rapports</span> </button> <button class="action" onclick="clientPage('registre')"> <div class="action-ico">📚</div><span>Registre</span> </button> <button class="action" onclick="clientPage('abonnements')"> <div class="action-ico">💳</div><span>Abonnements</span> </button> <button class="action" onclick="clientPage('echeances')"> <div class="action-ico">📅</div><span>Échéances</span> </button> <button class="action" onclick="clientPage('rendezvous')"> <div class="action-ico">🕒</div><span>Rendez-vous</span> </button> </div> <div class="bottom-actions"> <button class="danger-btn" onclick="logout()">Déconnexion</button> </div>`;
+  hideMainBars();
+  document.getElementById("content").innerHTML = `
+    <div class="detail-top">
+      <div class="detail-title">Espace client</div>
+      <div class="detail-sub">Démonstration</div>
+    </div>
+    <div class="main-intervention">
+      <div class="icon">🏢</div>
+      <div class="info">
+        <div class="main-title">${CLIENT_NAME}</div>
+        <div class="main-line">Bienvenue dans votre espace client sécurisé.</div>
+        <div class="main-line">Documents, rapports, registre et abonnements regroupés ici.</div>
+      </div>
+    </div>
+    <div class="action-grid">
+      <button class="action" onclick="clientPage('documents')">
+        <div class="action-ico">📄</div><span>Documents</span>
+      </button>
+      <button class="action" onclick="clientPage('rapports')">
+        <div class="action-ico">📋</div><span>Rapports</span>
+      </button>
+      <button class="action" onclick="clientPage('registre')">
+        <div class="action-ico">📚</div><span>Registre</span>
+      </button>
+      <button class="action" onclick="clientPage('abonnements')">
+        <div class="action-ico">💳</div><span>Abonnements</span>
+      </button>
+      <button class="action" onclick="clientPage('echeances')">
+        <div class="action-ico">📅</div><span>Échéances</span>
+      </button>
+      <button class="action" onclick="clientPage('rendezvous')">
+        <div class="action-ico">🕒</div><span>Rendez-vous</span>
+      </button>
+    </div>
+    <div class="bottom-actions">
+      <button class="danger-btn" onclick="logout()">Déconnexion</button>
+    </div>`;
 }
 
 function clientPage(page) {
-hideMainBars();
-const c = document.getElementById(“content”);
+  hideMainBars();
+  const c = document.getElementById("content");
 
-if (page === “documents”) {
-c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Documents</div> <div class="detail-sub">${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_DOCUMENTS.length} document${DEMO_DOCUMENTS.length>1?"s":""}</div> ${DEMO_DOCUMENTS.map(d =>`
-<div class="card blue" onclick="toast('Ouverture du document…')">
-<div class="icon">${d.ico}</div>
-<div class="info">
-<div class="cname">${d.name}</div>
-<div class="cdate">${d.date} · ${d.type}</div>
-</div>
-<div class="chev">↓</div>
-</div>
-`).join("")}`;
-}
+  if (page === "documents") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Documents</div>
+        <div class="detail-sub">${CLIENT_NAME}</div>
+      </div>
+      <div class="slabel">${DEMO_DOCUMENTS.length} document${DEMO_DOCUMENTS.length>1?"s":""}</div>
+      ${DEMO_DOCUMENTS.map(d => `
+        <div class="card blue" onclick="toast('Ouverture du document…')">
+          <div class="icon">${d.ico}</div>
+          <div class="info">
+            <div class="cname">${d.name}</div>
+            <div class="cdate">${d.date} · ${d.type}</div>
+          </div>
+          <div class="chev">↓</div>
+        </div>
+      `).join("")}`;
+  }
 
-else if (page === “rapports”) {
-c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Rapports</div> <div class="detail-sub">${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_RAPPORTS.length} rapport${DEMO_RAPPORTS.length>1?"s":""}</div> ${DEMO_RAPPORTS.map(r =>`
-<div class="card ${r.statut === 'ok' ? 'ok' : 'orange'}" onclick="toast('Ouverture du rapport…')">
-<div class="icon">${r.ico}</div>
-<div class="info">
-<div class="cname">${r.name}</div>
-<div class="cdate">${r.date} · ${r.tech}</div>
-</div>
-<div class="chev">↓</div>
-</div>
-`).join("")} <div class="slabel">Suivi des interventions</div> ${DEMO_INTERVENTIONS.map(i => `
-<div class="card ok">
-<div class="icon">${i.ico}</div>
-<div class="info">
-<div class="cname">${i.name}</div>
-<div class="cdate">${i.date} · ${i.tech}</div>
-<div class="cdate">${i.adresse}</div>
-</div>
-<span class="reg-pill ok">${i.statut}</span>
-</div>
-`).join("")}`;
-}
+  else if (page === "rapports") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Rapports</div>
+        <div class="detail-sub">${CLIENT_NAME}</div>
+      </div>
+      <div class="slabel">${DEMO_RAPPORTS.length} rapport${DEMO_RAPPORTS.length>1?"s":""}</div>
+      ${DEMO_RAPPORTS.map(r => `
+        <div class="card ${r.statut === 'ok' ? 'ok' : 'orange'}" onclick="toast('Ouverture du rapport…')">
+          <div class="icon">${r.ico}</div>
+          <div class="info">
+            <div class="cname">${r.name}</div>
+            <div class="cdate">${r.date} · ${r.tech}</div>
+          </div>
+          <div class="chev">↓</div>
+        </div>
+      `).join("")}
+      <div class="slabel">Suivi des interventions</div>
+      ${DEMO_INTERVENTIONS.map(i => `
+        <div class="card ok">
+          <div class="icon">${i.ico}</div>
+          <div class="info">
+            <div class="cname">${i.name}</div>
+            <div class="cdate">${i.date} · ${i.tech}</div>
+            <div class="cdate">${i.adresse}</div>
+          </div>
+          <span class="reg-pill ok">${i.statut}</span>
+        </div>
+      `).join("")}`;
+  }
 
-else if (page === “registre”) {
-c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Registre</div> <div class="detail-sub">Registre dématérialisé · ${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_REGISTRE.length} équipements</div> ${DEMO_REGISTRE.map(r =>`
-<div class="reg-row">
-<div class="reg-ico">${r.ico}</div>
-<div class="reg-info">
-<div class="reg-name">${r.name}</div>
-<div class="reg-meta">N° ${r.serie} · Prochaine vérif. ${r.verif}</div>
-</div>
-<span class="reg-pill ${r.statut}">${r.statut === ‘ok’ ? ‘À jour’ : r.statut === ‘warn’ ? ‘Proche’ : ‘Dépassé’}</span>
-</div>
-`).join("")} <div style="margin-top:8px"> <button class="secondary-btn" onclick="toast('Téléchargement du registre PDF…')">📥 Télécharger le registre PDF</button> </div>`;
-}
+  else if (page === "registre") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Registre</div>
+        <div class="detail-sub">Registre dématérialisé · ${CLIENT_NAME}</div>
+      </div>
+      <div class="slabel">${DEMO_REGISTRE.length} équipements</div>
+      ${DEMO_REGISTRE.map(r => `
+        <div class="reg-row">
+          <div class="reg-ico">${r.ico}</div>
+          <div class="reg-info">
+            <div class="reg-name">${r.name}</div>
+            <div class="reg-meta">N° ${r.serie} · Prochaine vérif. ${r.verif}</div>
+          </div>
+          <span class="reg-pill ${r.statut}">${r.statut === 'ok' ? 'À jour' : r.statut === 'warn' ? 'Proche' : 'Dépassé'}</span>
+        </div>
+      `).join("")}
+      <div style="margin-top:8px">
+        <button class="secondary-btn" onclick="toast('Téléchargement du registre PDF…')">📥 Télécharger le registre PDF</button>
+      </div>`;
+  }
 
-else if (page === “echeances”) {
-c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Échéances</div> <div class="detail-sub">Suivi des vérifications · ${CLIENT_NAME}</div> </div> <div class="slabel">Vérifications réglementaires</div> ${DEMO_ECHEANCES.map(e =>`
-<div class="card ${e.statut === 'ok' ? 'ok' : e.statut === 'warn' ? 'orange' : 'red'}">
-<div class="icon">${e.ico}</div>
-<div class="info">
-<div class="cname">${e.name}</div>
-<div class="cdate">Échéance : ${e.echeance}</div>
-<div class="cdate">${e.jours > 0 ? `Dans ${e.jours} jours` : `Dépassée de ${Math.abs(e.jours)} jours`}</div>
-</div>
-<span class="reg-pill ${e.statut}">${e.statut === ‘ok’ ? ‘À jour’ : e.statut === ‘warn’ ? ‘Bientôt’ : ‘Urgent’}</span>
-</div>
-`).join("")} <div style="margin-top:8px"> <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Prendre rendez-vous</button> </div>`;
-}
+  else if (page === "echeances") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Échéances</div>
+        <div class="detail-sub">Suivi des vérifications · ${CLIENT_NAME}</div>
+      </div>
+      <div class="slabel">Vérifications réglementaires</div>
+      ${DEMO_ECHEANCES.map(e => `
+        <div class="card ${e.statut === 'ok' ? 'ok' : e.statut === 'warn' ? 'orange' : 'red'}">
+          <div class="icon">${e.ico}</div>
+          <div class="info">
+            <div class="cname">${e.name}</div>
+            <div class="cdate">Échéance : ${e.echeance}</div>
+            <div class="cdate">${e.jours > 0 ? `Dans ${e.jours} jours` : `Dépassée de ${Math.abs(e.jours)} jours`}</div>
+          </div>
+          <span class="reg-pill ${e.statut}">${e.statut === 'ok' ? 'À jour' : e.statut === 'warn' ? 'Bientôt' : 'Urgent'}</span>
+        </div>
+      `).join("")}
+      <div style="margin-top:8px">
+        <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Prendre rendez-vous</button>
+      </div>`;
+  }
 
-else if (page === “abonnements”) {
-c.innerHTML = `
-<div class="detail-top">
-<div class="back" onclick="renderClientDemoHome()">Retour</div>
-<div class="detail-title">Abonnements</div>
-<div class="detail-sub">${CLIENT_NAME}</div>
-</div>
-<div class="slabel">Choisissez votre formule</div>
+  else if (page === "abonnements") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Abonnements</div>
+        <div class="detail-sub">${CLIENT_NAME}</div>
+      </div>
+      <div class="slabel">Choisissez votre formule</div>
 
-```
-  <div class="abon-card" onclick="selectAbon('T1', this)">
-    <div class="abon-header">
-      <div class="abon-title">Formule T1</div>
-    </div>
-    <div class="abon-price">8€ <span>/ mois</span></div>
-    <div class="abon-desc">Pour les petits locaux avec un seul point d'extinction.</div>
-    <div class="abon-features">
-      <div class="abon-feat">1 extincteur inclus</div>
-      <div class="abon-feat">Vérification annuelle</div>
-      <div class="abon-feat">Rapport d'intervention</div>
-      <div class="abon-feat">Accès espace client</div>
-    </div>
-  </div>
+      <div class="abon-card" onclick="selectAbon('T1', this)">
+        <div class="abon-header">
+          <div class="abon-title">Formule T1</div>
+        </div>
+        <div class="abon-price">8€ <span>/ mois</span></div>
+        <div class="abon-desc">Pour les petits locaux avec un seul point d'extinction.</div>
+        <div class="abon-features">
+          <div class="abon-feat">1 extincteur inclus</div>
+          <div class="abon-feat">Vérification annuelle</div>
+          <div class="abon-feat">Rapport d'intervention</div>
+          <div class="abon-feat">Accès espace client</div>
+        </div>
+      </div>
 
-  <div class="abon-card popular" onclick="selectAbon('T2', this)">
-    <div class="abon-header">
-      <div class="abon-title">Formule T2</div>
-      <div class="abon-badge">⭐ POPULAIRE</div>
-    </div>
-    <div class="abon-price">15€ <span>/ mois</span></div>
-    <div class="abon-desc">Pour les locaux avec plusieurs zones à sécuriser.</div>
-    <div class="abon-features">
-      <div class="abon-feat">2 extincteurs inclus</div>
-      <div class="abon-feat">Vérification annuelle</div>
-      <div class="abon-feat">Rapport d'intervention</div>
-      <div class="abon-feat">Accès espace client</div>
-      <div class="abon-feat">Rappels automatiques</div>
-    </div>
-  </div>
+      <div class="abon-card popular" onclick="selectAbon('T2', this)">
+        <div class="abon-header">
+          <div class="abon-title">Formule T2</div>
+          <div class="abon-badge">⭐ POPULAIRE</div>
+        </div>
+        <div class="abon-price">15€ <span>/ mois</span></div>
+        <div class="abon-desc">Pour les locaux avec plusieurs zones à sécuriser.</div>
+        <div class="abon-features">
+          <div class="abon-feat">2 extincteurs inclus</div>
+          <div class="abon-feat">Vérification annuelle</div>
+          <div class="abon-feat">Rapport d'intervention</div>
+          <div class="abon-feat">Accès espace client</div>
+          <div class="abon-feat">Rappels automatiques</div>
+        </div>
+      </div>
 
-  <div class="bottom-actions" id="abonActions" style="display:none">
-    <button class="success-btn" onclick="goToPayment()">💳 Souscrire et payer en ligne</button>
-  </div>`;
-```
+      <div class="bottom-actions" id="abonActions" style="display:none">
+        <button class="success-btn" onclick="goToPayment()">💳 Souscrire et payer en ligne</button>
+      </div>`;
+  }
 
-}
+  else if (page === "rendezvous") {
+    c.innerHTML = `
+      <div class="detail-top">
+        <div class="back" onclick="renderClientDemoHome()">Retour</div>
+        <div class="detail-title">Rendez-vous</div>
+        <div class="detail-sub">Prise de RDV · ${CLIENT_NAME}</div>
+      </div>
+      <div class="main-intervention" style="margin-bottom:20px">
+        <div class="icon">📅</div>
+        <div class="info">
+          <div class="main-title">Planifier une intervention</div>
+          <div class="main-line">Choisissez le type d'intervention et vos disponibilités.</div>
+        </div>
+      </div>
+      <div class="slabel">Type d'intervention</div>
+      <select class="rdv-select" id="rdvType">
+        <option value="">-- Sélectionner --</option>
+        <option>Vérification extincteurs</option>
+        <option>Contrôle BAES</option>
+        <option>Essai alarme incendie</option>
+        <option>Maintenance générale</option>
+        <option>Pose de matériel</option>
+        <option>Autre</option>
+      </select>
+      <div class="slabel">Date souhaitée</div>
+      <input class="rdv-input" type="date" id="rdvDate">
+      <div class="slabel">Créneau préféré</div>
+      <select class="rdv-select" id="rdvCreneau">
+        <option value="">-- Sélectionner --</option>
+        <option>Matin (8h–12h)</option>
+        <option>Après-midi (13h–17h)</option>
+        <option>Toute la journée</option>
+      </select>
+      <div class="slabel">Commentaire (optionnel)</div>
+      <textarea placeholder="Précisions sur l'accès, le site, le matériel…" id="rdvComment" style="min-height:90px"></textarea>
+      <div class="bottom-actions">
+        <button class="primary-btn" onclick="submitRdv()">📅 Envoyer la demande de RDV</button>
+      </div>`;
 
-else if (page === “rendezvous”) {
-c.innerHTML = ` <div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Rendez-vous</div> <div class="detail-sub">Prise de RDV · ${CLIENT_NAME}</div> </div> <div class="main-intervention" style="margin-bottom:20px"> <div class="icon">📅</div> <div class="info"> <div class="main-title">Planifier une intervention</div> <div class="main-line">Choisissez le type d'intervention et vos disponibilités.</div> </div> </div> <div class="slabel">Type d'intervention</div> <select class="rdv-select" id="rdvType"> <option value="">-- Sélectionner --</option> <option>Vérification extincteurs</option> <option>Contrôle BAES</option> <option>Essai alarme incendie</option> <option>Maintenance générale</option> <option>Pose de matériel</option> <option>Autre</option> </select> <div class="slabel">Date souhaitée</div> <input class="rdv-input" type="date" id="rdvDate"> <div class="slabel">Créneau préféré</div> <select class="rdv-select" id="rdvCreneau"> <option value="">-- Sélectionner --</option> <option>Matin (8h–12h)</option> <option>Après-midi (13h–17h)</option> <option>Toute la journée</option> </select> <div class="slabel">Commentaire (optionnel)</div> <textarea placeholder="Précisions sur l'accès, le site, le matériel…" id="rdvComment" style="min-height:90px"></textarea> <div class="bottom-actions"> <button class="primary-btn" onclick="submitRdv()">📅 Envoyer la demande de RDV</button> </div>`;
-
-```
-// Pré-remplir la date avec demain
-const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-document.getElementById("rdvDate").value = tomorrow.toISOString().split("T")[0];
-```
-
-}
+    // Pré-remplir la date avec demain
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+    document.getElementById("rdvDate").value = tomorrow.toISOString().split("T")[0];
+  }
 }
 
 let selectedAbon = null;
 function selectAbon(type, el) {
-selectedAbon = type;
-document.querySelectorAll(”.abon-card”).forEach(c => c.style.borderColor = “transparent”);
-el.style.borderColor = “var(–accent)”;
-document.getElementById(“abonActions”).style.display = “flex”;
+  selectedAbon = type;
+  document.querySelectorAll(".abon-card").forEach(c => c.style.borderColor = "transparent");
+  el.style.borderColor = "var(--accent)";
+  document.getElementById("abonActions").style.display = "flex";
 }
 
 function goToPayment() {
-if (!selectedAbon) { toast(“Veuillez choisir une formule”); return; }
-hideMainBars();
-const price = selectedAbon === “T1” ? “8€/mois” : “15€/mois”;
-const mats   = selectedAbon === “T1” ? “1 extincteur” : “2 extincteurs”;
-document.getElementById(“content”).innerHTML = ` <div class="detail-top"> <div class="back" onclick="clientPage('abonnements')">Retour</div> <div class="detail-title">Paiement</div> <div class="detail-sub">Formule ${selectedAbon} · ${price}</div> </div> <div class="main-intervention"> <div class="icon">💳</div> <div class="info"> <div class="main-title">Formule ${selectedAbon}</div> <div class="main-line">${mats} inclus</div> <div class="main-line main-date">${price}</div> </div> </div> <div class="slabel">Informations de paiement</div> <input class="rdv-input" placeholder="Numéro de carte" value="•••• •••• •••• 4242"> <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"> <input class="rdv-input" style="margin:0" placeholder="MM/AA" value="12/27"> <input class="rdv-input" style="margin:0" placeholder="CVC" value="•••"> </div> <input class="rdv-input" placeholder="Titulaire de la carte" value="AGS Incendie"> <div class="bottom-actions" style="margin-top:8px"> <button class="success-btn" onclick="confirmPayment()">🔒 Confirmer le paiement · ${price}</button> </div>`;
+  if (!selectedAbon) { toast("Veuillez choisir une formule"); return; }
+  hideMainBars();
+  const price = selectedAbon === "T1" ? "8€/mois" : "15€/mois";
+  const mats   = selectedAbon === "T1" ? "1 extincteur" : "2 extincteurs";
+  document.getElementById("content").innerHTML = `
+    <div class="detail-top">
+      <div class="back" onclick="clientPage('abonnements')">Retour</div>
+      <div class="detail-title">Paiement</div>
+      <div class="detail-sub">Formule ${selectedAbon} · ${price}</div>
+    </div>
+    <div class="main-intervention">
+      <div class="icon">💳</div>
+      <div class="info">
+        <div class="main-title">Formule ${selectedAbon}</div>
+        <div class="main-line">${mats} inclus</div>
+        <div class="main-line main-date">${price}</div>
+      </div>
+    </div>
+    <div class="slabel">Informations de paiement</div>
+    <input class="rdv-input" placeholder="Numéro de carte" value="•••• •••• •••• 4242">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <input class="rdv-input" style="margin:0" placeholder="MM/AA" value="12/27">
+      <input class="rdv-input" style="margin:0" placeholder="CVC" value="•••">
+    </div>
+    <input class="rdv-input" placeholder="Titulaire de la carte" value="AGS Incendie">
+    <div class="bottom-actions" style="margin-top:8px">
+      <button class="success-btn" onclick="confirmPayment()">🔒 Confirmer le paiement · ${price}</button>
+    </div>`;
 }
 
 function confirmPayment() {
-hideMainBars();
-document.getElementById(“content”).innerHTML = ` <div class="confirm-screen"> <span class="confirm-ico">🎉</span> <div class="confirm-title">Abonnement activé !</div> <div class="confirm-sub"> Votre formule ${selectedAbon} est active.<br> Une intervention de pose sera planifiée automatiquement dans votre planning. </div> <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px"> <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Planifier la pose maintenant</button> <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button> </div> </div>`;
+  hideMainBars();
+  document.getElementById("content").innerHTML = `
+    <div class="confirm-screen">
+      <span class="confirm-ico">🎉</span>
+      <div class="confirm-title">Abonnement activé !</div>
+      <div class="confirm-sub">
+        Votre formule ${selectedAbon} est active.<br>
+        Une intervention de pose sera planifiée automatiquement dans votre planning.
+      </div>
+      <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px">
+        <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Planifier la pose maintenant</button>
+        <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button>
+      </div>
+    </div>`;
 }
 
 function submitRdv() {
-const type    = document.getElementById(“rdvType”).value;
-const date    = document.getElementById(“rdvDate”).value;
-const creneau = document.getElementById(“rdvCreneau”).value;
-if (!type || !date || !creneau) { toast(“Veuillez remplir tous les champs”); return; }
-const dateF = new Date(date).toLocaleDateString(“fr-FR”, { weekday:“long”, day:“numeric”, month:“long” });
-hideMainBars();
-document.getElementById(“content”).innerHTML = ` <div class="confirm-screen"> <span class="confirm-ico">✅</span> <div class="confirm-title">Demande envoyée !</div> <div class="confirm-sub"> Votre demande de RDV pour<br> <strong>${type}</strong><br> le <strong>${dateF}</strong> (${creneau})<br> a bien été transmise.<br><br> L'intervention sera ajoutée au planning du technicien dès confirmation. </div> <div style="margin-top:24px"> <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button> </div> </div>`;
+  const type    = document.getElementById("rdvType").value;
+  const date    = document.getElementById("rdvDate").value;
+  const creneau = document.getElementById("rdvCreneau").value;
+  if (!type || !date || !creneau) { toast("Veuillez remplir tous les champs"); return; }
+  const dateF = new Date(date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+  hideMainBars();
+  document.getElementById("content").innerHTML = `
+    <div class="confirm-screen">
+      <span class="confirm-ico">✅</span>
+      <div class="confirm-title">Demande envoyée !</div>
+      <div class="confirm-sub">
+        Votre demande de RDV pour<br>
+        <strong>${type}</strong><br>
+        le <strong>${dateF}</strong> (${creneau})<br>
+        a bien été transmise.<br><br>
+        L'intervention sera ajoutée au planning du technicien dès confirmation.
+      </div>
+      <div style="margin-top:24px">
+        <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button>
+      </div>
+    </div>`;
 }
 
 // ─── SHARED UTILS ────────────────────────────────────────────────────────────
-function showMainBars() { document.getElementById(“mainHeader”).style.display=“flex”; document.getElementById(“tabs”).style.display=“flex”; }
-function hideMainBars() { document.getElementById(“mainHeader”).style.display=“none”; document.getElementById(“tabs”).style.display=“none”; }
-function showLoader() { document.getElementById(“content”).innerHTML=`<div class="loader"><div class="spinner"></div></div>`; }
-function empty(ico,title,sub=””) { return `<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`; }
+function showMainBars() { document.getElementById("mainHeader").style.display="flex"; document.getElementById("tabs").style.display="flex"; }
+function hideMainBars() { document.getElementById("mainHeader").style.display="none"; document.getElementById("tabs").style.display="none"; }
+function showLoader() { document.getElementById("content").innerHTML=`<div class="loader"><div class="spinner"></div></div>`; }
+function empty(ico,title,sub="") { return `<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`; }
 
 let tt;
 function toast(msg) {
-const el = document.getElementById(“toast”);
-el.textContent = msg;
-el.classList.add(“show”);
-clearTimeout(tt);
-tt = setTimeout(() => el.classList.remove(“show”), 2300);
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(tt);
+  tt = setTimeout(() => el.classList.remove("show"), 2300);
 }
 
-function callClient(phone) { window.location.href = “tel:” + phone; }
-function openMaps(adresse) { window.open(“https://www.google.com/maps/search/?api=1&query=”+encodeURIComponent(adresse),”_blank”); }
+function callClient(phone) { window.location.href = "tel:" + phone; }
+function openMaps(adresse) { window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(adresse),"_blank"); }
 function updateBadge() {
-const today = midnight(new Date());
-const n = items.filter(i => midnight(i.date) < today).length;
-const b = document.getElementById(“badge”);
-b.textContent = n + “ en retard”;
-b.classList.toggle(“on”, n > 0);
+  const today = midnight(new Date());
+  const n = items.filter(i => midnight(i.date) < today).length;
+  const b = document.getElementById("badge");
+  b.textContent = n + " en retard";
+  b.classList.toggle("on", n > 0);
 }
 function midnight(d) { const x=new Date(d); x.setHours(0,0,0,0); return x; }
-function fmtDate(str) { const d=new Date(str); const s=d.toLocaleDateString(“fr-FR”,{weekday:“long”,day:“numeric”,month:“long”}); return s.charAt(0).toUpperCase()+s.slice(1); }
-function fmtHeure(str) { return new Date(str).toLocaleTimeString(“fr-FR”,{hour:“2-digit”,minute:“2-digit”}); }
-function getAdresseSansCP(adresse) { return String(adresse||””).replace(/\s+\d{5}\s+.+$/i,””); }
-function getCodePostalVille(adresse) { const m=String(adresse||””).match(/(\d{5})\s+(.+)$/); return m?`${m[1]} ${m[2]}`:””; }
-function escapeJs(v) { return String(v||””).replace(/\/g,”\\”).replace(/’/g,”\’”).replace(/”/g,”"”); }
-function safe(v) { return String(v||””).replace(/&/g,”&”).replace(/</g,”<”).replace(/>/g,”>”); }
+function fmtDate(str) { const d=new Date(str); const s=d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}); return s.charAt(0).toUpperCase()+s.slice(1); }
+function fmtHeure(str) { return new Date(str).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}); }
+function getAdresseSansCP(adresse) { return String(adresse||"").replace(/\s+\d{5}\s+.+$/i,""); }
+function getCodePostalVille(adresse) { const m=String(adresse||"").match(/(\d{5})\s+(.+)$/); return m?`${m[1]} ${m[2]}`:""; }
+function escapeJs(v) { return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
+function safe(v) { return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 function loginDemo() {
-const email    = document.getElementById(“loginEmail”).value.trim().toLowerCase();
-const password = document.getElementById(“loginPassword”).value.trim();
-if (email === “tech@demo.fr” && password === “1234”) { localStorage.setItem(“demoRole”,“technicien”); startApp(“technicien”); return; }
-if (email === “client@demo.fr” && password === “1234”) { localStorage.setItem(“demoRole”,“client”); startApp(“client”); return; }
-toast(“Identifiants incorrects”);
+  const email    = document.getElementById("loginEmail").value.trim().toLowerCase();
+  const password = document.getElementById("loginPassword").value.trim();
+  if (email === "tech@demo.fr" && password === "1234") { localStorage.setItem("demoRole","technicien"); startApp("technicien"); return; }
+  if (email === "client@demo.fr" && password === "1234") { localStorage.setItem("demoRole","client"); startApp("client"); return; }
+  toast("Identifiants incorrects");
 }
 
 function startApp(role) {
-currentRole = role;
-document.getElementById(“loginScreen”).style.display = “none”;
-document.getElementById(“app”).style.display = “flex”;
-if (role === “technicien”) { showMainBars(); loadData(); }
-if (role === “client”) { hideMainBars(); renderClientDemoHome(); }
+  currentRole = role;
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  if (role === "technicien") { showMainBars(); loadData(); }
+  if (role === "client") { hideMainBars(); renderClientDemoHome(); }
 }
 
 function logout() {
-localStorage.removeItem(“demoRole”);
-selectedItem = null;
-currentRole = null;
-document.getElementById(“app”).style.display = “none”;
-document.getElementById(“loginScreen”).style.display = “flex”;
+  localStorage.removeItem("demoRole");
+  selectedItem = null;
+  currentRole = null;
+  document.getElementById("app").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
 }
 
-const savedRole = localStorage.getItem(“demoRole”);
+const savedRole = localStorage.getItem("demoRole");
 if (savedRole) startApp(savedRole);
 </script>
-
 </body>
 </html>
