@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -32,700 +33,291 @@
   --radius-lg:   24px;
 }
 
-html, body {
-  height: 100%;
-  background: var(--bg);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
+html, body { height:100%; background:var(--bg); font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif; -webkit-font-smoothing:antialiased; }
 
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(10,132,255,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(48,209,88,0.06) 0%, transparent 55%);
-  pointer-events: none;
-  z-index: 0;
+  content:''; position:fixed; inset:0;
+  background: radial-gradient(ellipse 80% 50% at 20% -10%,rgba(10,132,255,0.08) 0%,transparent 60%),
+              radial-gradient(ellipse 60% 40% at 85% 110%,rgba(48,209,88,0.06) 0%,transparent 55%);
+  pointer-events:none; z-index:0;
 }
 
-#wrap {
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  position: relative;
-  z-index: 1;
-}
+#wrap { display:flex; justify-content:center; min-height:100vh; position:relative; z-index:1; }
 
-#app {
-  width: 100%;
-  max-width: 430px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: transparent;
-}
+#app { width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; background:transparent; }
 
 .hdr {
-  background: rgba(255,255,255,0.78);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--sep);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
+  background:rgba(255,255,255,0.78); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
+  padding:18px 20px 14px; border-bottom:1px solid var(--sep);
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:50;
 }
 
-.logo { height: 52px; max-width: 160px; object-fit: contain; }
+.logo { height:52px; max-width:160px; object-fit:contain; }
 
 .badge {
-  background: linear-gradient(135deg, rgba(255,59,48,0.15), rgba(255,59,48,0.08));
-  color: var(--danger);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  padding: 5px 11px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,59,48,0.18);
-  display: none;
-  white-space: nowrap;
+  background:linear-gradient(135deg,rgba(255,59,48,0.15),rgba(255,59,48,0.08));
+  color:var(--danger); font-size:11px; font-weight:800; letter-spacing:.02em;
+  padding:5px 11px; border-radius:20px; border:1px solid rgba(255,59,48,0.18);
+  display:none; white-space:nowrap;
 }
-.badge.on { display: block; animation: badgePop .3s cubic-bezier(.34,1.56,.64,1); }
+.badge.on { display:block; animation:badgePop .3s cubic-bezier(.34,1.56,.64,1); }
 
 .tabs {
-  display: flex;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--sep);
-  padding: 0 8px;
-  gap: 2px;
-  position: sticky;
-  top: 85px;
-  z-index: 49;
+  display:flex; background:rgba(255,255,255,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--sep); padding:0 8px; gap:2px;
+  position:sticky; top:85px; z-index:49;
 }
 
-.tab {
-  flex: 1;
-  padding: 12px 4px 13px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--label3);
-  cursor: pointer;
-  position: relative;
-  transition: color .2s ease;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
+.tab { flex:1; padding:12px 4px 13px; text-align:center; font-size:13px; font-weight:700; color:var(--label3); cursor:pointer; position:relative; transition:color .2s ease; user-select:none; -webkit-tap-highlight-color:transparent; }
+.tab.active { color:var(--accent); }
+.tab.active::after { content:''; position:absolute; bottom:-1px; left:20%; right:20%; height:2px; background:var(--accent); border-radius:2px 2px 0 0; animation:tabSlide .22s ease; }
 
-.tab.active { color: var(--accent); }
+#content { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 14px 32px; }
 
-.tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 20%; right: 20%;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px 2px 0 0;
-  animation: tabSlide .22s ease;
-}
-
-#content {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px 14px 32px;
-}
-
-.slabel {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--label3);
-  padding: 6px 4px 10px;
-}
+.slabel { font-size:11px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; color:var(--label3); padding:6px 4px 10px; }
 
 .card {
-  background: var(--surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: var(--radius);
-  padding: 14px 14px 14px 18px;
-  margin-bottom: 9px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(255,255,255,0.6);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform .15s ease, box-shadow .15s ease, opacity .25s ease;
-  animation: cardIn .28s cubic-bezier(.22,1,.36,1) both;
+  background:var(--surface); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-radius:var(--radius); padding:14px 14px 14px 18px; margin-bottom:9px;
+  display:flex; align-items:center; gap:13px;
+  box-shadow:var(--shadow-sm); border:1px solid rgba(255,255,255,0.6);
+  cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .15s ease, box-shadow .15s ease, opacity .25s ease;
+  animation:cardIn .28s cubic-bezier(.22,1,.36,1) both;
 }
+.card:active { transform:scale(.985); box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.card::before { content:''; position:absolute; left:0; top:10%; bottom:10%; width:3.5px; border-radius:0 3px 3px 0; }
+.card.red::before    { background:linear-gradient(180deg,#FF6B6B,var(--danger)); }
+.card.orange::before { background:linear-gradient(180deg,#FFBD69,var(--warning)); }
+.card.ok::before     { background:linear-gradient(180deg,#5EE88B,var(--success)); }
+.card.blue::before   { background:linear-gradient(180deg,#5AC8FA,var(--accent)); }
 
-.card:active {
-  transform: scale(.985);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
+.icon { width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.card.red    .icon { background:var(--danger-soft); }
+.card.orange .icon { background:var(--warning-soft); }
+.card.ok     .icon { background:var(--success-soft); }
+.card.blue   .icon { background:var(--accent-soft); }
 
-.card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 10%; bottom: 10%;
-  width: 3.5px;
-  border-radius: 0 3px 3px 0;
-}
-
-.card.red::before    { background: linear-gradient(180deg, #FF6B6B, var(--danger)); }
-.card.orange::before { background: linear-gradient(180deg, #FFBD69, var(--warning)); }
-.card.ok::before     { background: linear-gradient(180deg, #5EE88B, var(--success)); }
-
-.icon {
-  width: 44px; height: 44px;
-  border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.card.red    .icon { background: var(--danger-soft); }
-.card.orange .icon { background: var(--warning-soft); }
-.card.ok     .icon { background: var(--success-soft); }
-
-.info { flex: 1; min-width: 0; }
-
-.cname {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--label);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 3px;
-  letter-spacing: -0.01em;
-}
-
-.cdate {
-  font-size: 12.5px;
-  color: var(--label3);
-  line-height: 1.4;
-  font-weight: 500;
-}
-
-.card.red    .cdate:first-of-type { color: var(--danger); font-weight: 700; }
-.card.orange .cdate:first-of-type { color: var(--warning); font-weight: 700; }
-
-.chev {
-  font-size: 18px;
-  color: rgba(9,9,14,0.18);
-  flex-shrink: 0;
-  font-weight: 700;
-}
+.info { flex:1; min-width:0; }
+.cname { font-size:15px; font-weight:800; color:var(--label); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; letter-spacing:-0.01em; }
+.cdate { font-size:12.5px; color:var(--label3); line-height:1.4; font-weight:500; }
+.card.red    .cdate:first-of-type { color:var(--danger); font-weight:700; }
+.card.orange .cdate:first-of-type { color:var(--warning); font-weight:700; }
+.chev { font-size:18px; color:rgba(9,9,14,0.18); flex-shrink:0; font-weight:700; }
 
 .detail-top {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  margin: -16px -14px 18px;
-  padding: 20px 20px 18px;
-  border-bottom: 1px solid var(--sep);
+  background:rgba(255,255,255,0.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  margin:-16px -14px 18px; padding:20px 20px 18px; border-bottom:1px solid var(--sep);
 }
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent);
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.back::before { content: '‹'; font-size: 20px; line-height: 1; }
-
-.detail-title {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--label);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.detail-sub {
-  font-size: 13px;
-  color: var(--label3);
-  font-weight: 600;
-  margin-top: 3px;
-}
+.back { display:inline-flex; align-items:center; gap:4px; color:var(--accent); font-size:15px; font-weight:700; margin-bottom:16px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.back::before { content:'‹'; font-size:20px; line-height:1; }
+.detail-title { font-size:28px; font-weight:800; color:var(--label); letter-spacing:-0.03em; line-height:1.1; }
+.detail-sub { font-size:13px; color:var(--label3); font-weight:600; margin-top:3px; }
 
 .main-intervention {
-  background: var(--surface-solid);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255,255,255,0.8);
-  display: flex;
-  gap: 14px;
-  margin-bottom: 16px;
-  animation: cardIn .3s ease both;
+  background:var(--surface-solid); border-radius:var(--radius); padding:18px;
+  box-shadow:var(--shadow-md); border:1px solid rgba(255,255,255,0.8);
+  display:flex; gap:14px; margin-bottom:16px; animation:cardIn .3s ease both;
 }
+.main-intervention .icon { width:50px; height:50px; border-radius:15px; font-size:24px; background:var(--accent-soft); flex-shrink:0; }
+.main-title { font-size:19px; font-weight:800; letter-spacing:-0.02em; margin-bottom:6px; color:var(--label); }
+.main-line { font-size:14px; color:var(--label2); line-height:1.5; font-weight:500; }
+.main-date { color:var(--warning); font-weight:800; margin-top:8px; font-size:13.5px; }
 
-.main-intervention .icon {
-  width: 50px; height: 50px;
-  border-radius: 15px;
-  font-size: 24px;
-  background: var(--accent-soft);
-  flex-shrink: 0;
-}
+.status-pill { display:inline-flex; align-items:center; gap:5px; margin-top:8px; background:var(--success-soft); color:var(--success); font-size:12px; font-weight:700; padding:4px 10px; border-radius:20px; }
+.status-pill.warn { background:var(--warning-soft); color:var(--warning); }
+.status-pill.danger { background:var(--danger-soft); color:var(--danger); }
+.status-pill.blue { background:var(--accent-soft); color:var(--accent); }
 
-.main-title {
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-  color: var(--label);
-}
-
-.main-line {
-  font-size: 14px;
-  color: var(--label2);
-  line-height: 1.5;
-  font-weight: 500;
-}
-
-.main-date {
-  color: var(--warning);
-  font-weight: 800;
-  margin-top: 8px;
-  font-size: 13.5px;
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 8px;
-  background: var(--success-soft);
-  color: var(--success);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-  margin-bottom: 16px;
-}
-
+.action-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:16px; }
 .action {
-  background: var(--surface-solid);
-  border: none;
-  border-radius: var(--radius-sm);
-  min-height: 90px;
-  padding: 14px 6px 12px;
-  font-family: inherit;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(255,255,255,0.7);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
-  -webkit-tap-highlight-color: transparent;
-  animation: cardIn .3s ease both;
+  background:var(--surface-solid); border:none; border-radius:var(--radius-sm);
+  min-height:90px; padding:14px 6px 12px; font-family:inherit;
+  box-shadow:var(--shadow-sm); border:1px solid rgba(255,255,255,0.7);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px;
+  cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+  -webkit-tap-highlight-color:transparent; animation:cardIn .3s ease both;
 }
+.action:active { transform:scale(.94); box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+.action-ico { font-size:28px; line-height:1; }
+.action span { font-size:12px; font-weight:700; color:var(--accent); text-align:center; letter-spacing:-0.01em; }
+.action.disabled { opacity:.38; cursor:default; }
+.action.disabled span { color:var(--label3); }
 
-.action:active {
-  transform: scale(.94);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
+.action-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:16px; }
+.action-grid-2 .action { min-height:80px; }
 
-.action-ico { font-size: 28px; line-height: 1; }
-
-.action span {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent);
-  text-align: center;
-  letter-spacing: -0.01em;
-}
-
-.action.disabled { opacity: .38; cursor: default; }
-.action.disabled span { color: var(--label3); }
-
-.bottom-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 8px;
-}
+.bottom-actions { display:flex; flex-direction:column; gap:10px; padding-bottom:8px; }
 
 .primary-btn {
-  width: 100%;
-  border: none;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 800;
-  padding: 17px;
-  cursor: pointer;
-  background: linear-gradient(160deg, #2196FF, #0A84FF);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(10,132,255,0.35), 0 1px 4px rgba(10,132,255,0.2);
-  transition: transform .15s, box-shadow .15s;
-  letter-spacing: -0.01em;
-  -webkit-tap-highlight-color: transparent;
+  width:100%; border:none; border-radius:var(--radius); font-family:inherit; font-size:16px; font-weight:800;
+  padding:17px; cursor:pointer; background:linear-gradient(160deg,#2196FF,#0A84FF); color:#fff;
+  box-shadow:0 4px 16px rgba(10,132,255,0.35),0 1px 4px rgba(10,132,255,0.2);
+  transition:transform .15s, box-shadow .15s; letter-spacing:-0.01em; -webkit-tap-highlight-color:transparent;
 }
-
-.primary-btn:active {
-  transform: scale(.97);
-  box-shadow: 0 2px 8px rgba(10,132,255,0.25);
-}
+.primary-btn:active { transform:scale(.97); box-shadow:0 2px 8px rgba(10,132,255,0.25); }
 
 .secondary-btn {
-  width: 100%;
-  border: 1.5px solid rgba(10,132,255,0.2);
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 17px;
-  cursor: pointer;
-  background: rgba(10,132,255,0.05);
-  color: var(--accent);
-  transition: transform .15s;
-  -webkit-tap-highlight-color: transparent;
+  width:100%; border:1.5px solid rgba(10,132,255,0.2); border-radius:var(--radius); font-family:inherit;
+  font-size:16px; font-weight:700; padding:17px; cursor:pointer; background:rgba(10,132,255,0.05);
+  color:var(--accent); transition:transform .15s; -webkit-tap-highlight-color:transparent;
 }
-
-.secondary-btn:active { transform: scale(.97); }
+.secondary-btn:active { transform:scale(.97); }
 
 .danger-btn {
-  width: 100%;
-  border: 1.5px solid rgba(255,59,48,0.18);
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 17px;
-  cursor: pointer;
-  background: rgba(255,59,48,0.05);
-  color: var(--danger);
-  transition: transform .15s;
-  -webkit-tap-highlight-color: transparent;
+  width:100%; border:1.5px solid rgba(255,59,48,0.18); border-radius:var(--radius); font-family:inherit;
+  font-size:16px; font-weight:700; padding:17px; cursor:pointer; background:rgba(255,59,48,0.05);
+  color:var(--danger); transition:transform .15s; -webkit-tap-highlight-color:transparent;
 }
+.danger-btn:active { transform:scale(.97); }
 
-.danger-btn:active { transform: scale(.97); }
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 80px 32px;
-  animation: cardIn .35s ease;
+.success-btn {
+  width:100%; border:none; border-radius:var(--radius); font-family:inherit; font-size:16px; font-weight:800;
+  padding:17px; cursor:pointer; background:linear-gradient(160deg,#34D870,#30D158); color:#fff;
+  box-shadow:0 4px 16px rgba(48,209,88,0.3); transition:transform .15s; -webkit-tap-highlight-color:transparent;
 }
+.success-btn:active { transform:scale(.97); }
 
-.empty-ico   { font-size: 52px; }
-.empty-title { font-size: 18px; font-weight: 800; color: var(--label); letter-spacing: -0.02em; }
-.empty-sub   { font-size: 13px; color: var(--label3); text-align: center; line-height: 1.5; }
+.empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:80px 32px; animation:cardIn .35s ease; }
+.empty-ico   { font-size:52px; }
+.empty-title { font-size:18px; font-weight:800; color:var(--label); letter-spacing:-0.02em; }
+.empty-sub   { font-size:13px; color:var(--label3); text-align:center; line-height:1.5; }
 
-.loader { display: flex; justify-content: center; padding: 80px; }
+.loader { display:flex; justify-content:center; padding:80px; }
+.spinner { width:30px; height:30px; border:3px solid rgba(10,132,255,0.15); border-top-color:var(--accent); border-radius:50%; animation:spin .75s linear infinite; }
 
-.spinner {
-  width: 30px; height: 30px;
-  border: 3px solid rgba(10,132,255,0.15);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .75s linear infinite;
+.backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:flex-end; justify-content:center; z-index:100; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+.backdrop.open { display:flex; animation:backdropIn .22s ease; }
+.sheet { width:100%; max-width:430px; padding:0 12px 30px; animation:sheetUp .28s cubic-bezier(.32,.72,0,1); }
+.sheet-card { background:rgba(252,252,252,0.96); backdrop-filter:blur(30px); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:10px; border:1px solid rgba(255,255,255,0.7); box-shadow:0 8px 40px rgba(0,0,0,0.18); }
+.sheet-info { padding:18px 18px 16px; text-align:center; border-bottom:1px solid var(--sep); }
+.sheet-name { font-size:16px; font-weight:800; color:var(--label); letter-spacing:-0.01em; }
+.sheet-sub  { font-size:13px; color:var(--label3); margin-top:3px; font-weight:500; }
+.sbtn { width:100%; padding:17px; background:transparent; border:none; font-family:inherit; font-size:17px; font-weight:700; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:background .12s; letter-spacing:-0.01em; }
+.sbtn:active { background:rgba(0,0,0,0.04); }
+.sbtn + .sbtn { border-top:1px solid var(--sep); }
+.sbtn.confirm { color:var(--accent); }
+.sbtn.warn    { color:var(--warning); }
+.sbtn.danger  { color:var(--danger); }
+.sbtn.cancel  { color:var(--label); font-weight:700; }
+
+.toast { position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(12px); background:rgba(18,18,22,0.88); backdrop-filter:blur(16px); color:#fff; padding:12px 20px; border-radius:16px; font-size:14px; font-weight:700; white-space:nowrap; z-index:999; opacity:0; pointer-events:none; transition:opacity .22s ease,transform .22s cubic-bezier(.32,.72,0,1); border:1px solid rgba(255,255,255,0.1); letter-spacing:-0.01em; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+textarea { width:100%; min-height:130px; border:1.5px solid var(--sep); border-radius:var(--radius); padding:14px 16px; font-family:inherit; font-size:15px; font-weight:500; resize:none; outline:none; background:var(--surface-solid); box-shadow:var(--shadow-sm); color:var(--label); transition:border-color .18s; margin-bottom:14px; }
+textarea:focus { border-color:var(--accent); }
+
+.login-screen { width:100%; max-width:430px; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px; }
+.login-card { width:100%; background:var(--surface-solid); border-radius:var(--radius-lg); padding:30px 24px; box-shadow:var(--shadow-md); border:1px solid rgba(255,255,255,0.8); text-align:center; animation:cardIn .35s ease both; }
+.login-logo { height:74px; object-fit:contain; margin-bottom:20px; }
+.login-title { font-size:28px; font-weight:800; color:var(--label); letter-spacing:-0.03em; margin-bottom:6px; }
+.login-sub { font-size:14px; font-weight:600; color:var(--label3); margin-bottom:22px; }
+.login-input { width:100%; border:1.5px solid var(--sep); border-radius:var(--radius); padding:16px; margin-bottom:12px; font-family:inherit; font-size:15px; font-weight:600; background:var(--bg); outline:none; color:var(--label); }
+.login-input:focus { border-color:var(--accent); background:#fff; }
+.login-demo { margin-top:18px; font-size:11px; line-height:1.6; color:var(--label3); font-weight:600; }
+
+.logout-btn { border:none; background:rgba(9,9,14,0.06); color:var(--label2); font-size:12px; font-weight:700; padding:10px 14px; border-radius:14px; cursor:pointer; font-family:inherit; transition:all .15s ease; }
+.logout-btn:active { transform:scale(.96); }
+
+/* Abonnement cards */
+.abon-card {
+  background:var(--surface-solid); border-radius:var(--radius); padding:20px; margin-bottom:12px;
+  box-shadow:var(--shadow-md); border:2px solid transparent;
+  cursor:pointer; transition:border-color .2s, transform .15s;
+  animation:cardIn .3s ease both;
 }
+.abon-card:active { transform:scale(.98); }
+.abon-card.selected { border-color:var(--accent); }
+.abon-card.popular { border-color:var(--accent); }
+.abon-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.abon-title { font-size:20px; font-weight:800; letter-spacing:-0.02em; color:var(--label); }
+.abon-badge { font-size:10px; font-weight:800; background:var(--accent-soft); color:var(--accent); padding:3px 9px; border-radius:20px; letter-spacing:.04em; }
+.abon-price { font-size:32px; font-weight:800; color:var(--accent); letter-spacing:-0.03em; }
+.abon-price span { font-size:14px; font-weight:600; color:var(--label3); }
+.abon-desc { font-size:13px; color:var(--label2); font-weight:500; margin-top:6px; line-height:1.5; }
+.abon-features { margin-top:12px; display:flex; flex-direction:column; gap:6px; }
+.abon-feat { font-size:13px; font-weight:600; color:var(--label2); display:flex; align-items:center; gap:7px; }
+.abon-feat::before { content:'✓'; color:var(--success); font-weight:800; }
 
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: none;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 100;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+/* Registre table */
+.reg-row {
+  background:var(--surface-solid); border-radius:var(--radius-sm); padding:14px 16px;
+  margin-bottom:8px; display:flex; align-items:center; gap:12px;
+  box-shadow:var(--shadow-sm); border:1px solid rgba(255,255,255,0.7);
+  animation:cardIn .28s ease both;
 }
+.reg-ico { font-size:22px; flex-shrink:0; }
+.reg-info { flex:1; min-width:0; }
+.reg-name { font-size:14px; font-weight:800; color:var(--label); margin-bottom:2px; }
+.reg-meta { font-size:12px; color:var(--label3); font-weight:500; }
+.reg-pill { font-size:11px; font-weight:800; padding:3px 10px; border-radius:20px; flex-shrink:0; }
+.reg-pill.ok     { background:var(--success-soft); color:var(--success); }
+.reg-pill.warn   { background:var(--warning-soft); color:var(--warning); }
+.reg-pill.danger { background:var(--danger-soft); color:var(--danger); }
 
-.backdrop.open {
-  display: flex;
-  animation: backdropIn .22s ease;
+/* RDV form */
+.rdv-select {
+  width:100%; border:1.5px solid var(--sep); border-radius:var(--radius); padding:16px;
+  margin-bottom:12px; font-family:inherit; font-size:15px; font-weight:600;
+  background:var(--surface-solid); outline:none; color:var(--label); appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 16px center; padding-right:40px;
 }
+.rdv-select:focus { border-color:var(--accent); }
+.rdv-input { width:100%; border:1.5px solid var(--sep); border-radius:var(--radius); padding:16px; margin-bottom:12px; font-family:inherit; font-size:15px; font-weight:600; background:var(--surface-solid); outline:none; color:var(--label); }
+.rdv-input:focus { border-color:var(--accent); }
 
-.sheet {
-  width: 100%;
-  max-width: 430px;
-  padding: 0 12px 30px;
-  animation: sheetUp .28s cubic-bezier(.32,.72,0,1);
-}
+/* Confirm screen */
+.confirm-screen { text-align:center; padding:32px 20px; animation:cardIn .4s ease; }
+.confirm-ico { font-size:72px; margin-bottom:20px; display:block; animation:badgePop .5s cubic-bezier(.34,1.56,.64,1); }
+.confirm-title { font-size:24px; font-weight:800; letter-spacing:-0.02em; margin-bottom:8px; }
+.confirm-sub { font-size:15px; color:var(--label3); font-weight:500; line-height:1.5; }
 
-.sheet-card {
-  background: rgba(252,252,252,0.96);
-  backdrop-filter: blur(30px);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255,255,255,0.7);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-}
+@keyframes cardIn    { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes badgePop  { from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes tabSlide  { from{transform:scaleX(.5);opacity:0} to{transform:scaleX(1);opacity:1} }
+@keyframes sheetUp   { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes backdropIn{ from{opacity:0} to{opacity:1} }
+@keyframes spin      { to{transform:rotate(360deg)} }
 
-.sheet-info {
-  padding: 18px 18px 16px;
-  text-align: center;
-  border-bottom: 1px solid var(--sep);
-}
-
-.sheet-name { font-size: 16px; font-weight: 800; color: var(--label); letter-spacing: -0.01em; }
-.sheet-sub  { font-size: 13px; color: var(--label3); margin-top: 3px; font-weight: 500; }
-
-.sbtn {
-  width: 100%;
-  padding: 17px;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background .12s;
-  letter-spacing: -0.01em;
-}
-
-.sbtn:active { background: rgba(0,0,0,0.04); }
-.sbtn + .sbtn { border-top: 1px solid var(--sep); }
-.sbtn.confirm { color: var(--accent); }
-.sbtn.warn    { color: var(--warning); }
-.sbtn.danger  { color: var(--danger); }
-.sbtn.cancel  { color: var(--label); font-weight: 700; }
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 34px;
-  transform: translateX(-50%) translateY(12px);
-  background: rgba(18,18,22,0.88);
-  backdrop-filter: blur(16px);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .22s ease, transform .22s cubic-bezier(.32,.72,0,1);
-  border: 1px solid rgba(255,255,255,0.1);
-  letter-spacing: -0.01em;
-}
-
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-textarea {
-  width: 100%;
-  min-height: 130px;
-  border: 1.5px solid var(--sep);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 500;
-  resize: none;
-  outline: none;
-  background: var(--surface-solid);
-  box-shadow: var(--shadow-sm);
-  color: var(--label);
-  transition: border-color .18s;
-  margin-bottom: 14px;
-}
-
-textarea:focus { border-color: var(--accent); }
-
-.login-screen {
-  width: 100%;
-  max-width: 430px;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-}
-
-.login-card {
-  width: 100%;
-  background: var(--surface-solid);
-  border-radius: var(--radius-lg);
-  padding: 30px 24px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255,255,255,0.8);
-  text-align: center;
-  animation: cardIn .35s ease both;
-}
-
-.login-logo {
-  height: 74px;
-  object-fit: contain;
-  margin-bottom: 20px;
-}
-
-.login-title {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--label);
-  letter-spacing: -0.03em;
-  margin-bottom: 6px;
-}
-
-.login-sub {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--label3);
-  margin-bottom: 22px;
-}
-
-.login-input {
-  width: 100%;
-  border: 1.5px solid var(--sep);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  background: var(--bg);
-  outline: none;
-  color: var(--label);
-}
-
-.login-input:focus {
-  border-color: var(--accent);
-  background: #fff;
-}
-
-.login-demo {
-  margin-top: 18px;
-  font-size: 11px;
-  line-height: 1.6;
-  color: var(--label3);
-  font-weight: 600;
-}
-
-  .logout-btn {
-  border: none;
-  background: rgba(9,9,14,0.06);
-  color: var(--label2);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all .15s ease;
-}
-
-.logout-btn:active {
-  transform: scale(.96);
-}
-  
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes badgePop {
-  from { transform: scale(.7); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-@keyframes tabSlide {
-  from { transform: scaleX(.5); opacity: 0; }
-  to   { transform: scaleX(1); opacity: 1; }
-}
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-@keyframes backdropIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.card:nth-child(1) { animation-delay: .03s; }
-.card:nth-child(2) { animation-delay: .06s; }
-.card:nth-child(3) { animation-delay: .09s; }
-.card:nth-child(4) { animation-delay: .12s; }
-.card:nth-child(5) { animation-delay: .15s; }
-
-.action:nth-child(1) { animation-delay: .05s; }
-.action:nth-child(2) { animation-delay: .09s; }
-.action:nth-child(3) { animation-delay: .13s; }
-.action:nth-child(4) { animation-delay: .17s; }
-.action:nth-child(5) { animation-delay: .21s; }
-.action:nth-child(6) { animation-delay: .25s; }
+.card:nth-child(1){animation-delay:.03s}.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.09s}.card:nth-child(4){animation-delay:.12s}.card:nth-child(5){animation-delay:.15s}
+.action:nth-child(1){animation-delay:.05s}.action:nth-child(2){animation-delay:.09s}.action:nth-child(3){animation-delay:.13s}.action:nth-child(4){animation-delay:.17s}.action:nth-child(5){animation-delay:.21s}.action:nth-child(6){animation-delay:.25s}
 </style>
+
 </head>
 
 <body>
 <div id="wrap">
   <div id="loginScreen" class="login-screen">
-  <div class="login-card">
-    <img src="https://i.imgur.com/1ZFTLIo.png" class="login-logo" alt="Clarity Systems">
-
-    <div class="login-title">Connexion</div>
-    <div class="login-sub">Accédez à votre espace sécurisé</div>
-
-    <input id="loginEmail" class="login-input" type="email" placeholder="Email">
-    <input id="loginPassword" class="login-input" type="password" placeholder="Mot de passe">
-
-    <button class="primary-btn" onclick="loginDemo()">Se connecter</button>
-
-    <div class="login-demo">
-      Démo technicien : tech@demo.fr / 1234<br>
-      Démo client : client@demo.fr / 1234
+    <div class="login-card">
+      <img src="https://i.imgur.com/1ZFTLIo.png" class="login-logo" alt="Clarity Systems">
+      <div class="login-title">Connexion</div>
+      <div class="login-sub">Accédez à votre espace sécurisé</div>
+      <input id="loginEmail" class="login-input" type="email" placeholder="Email">
+      <input id="loginPassword" class="login-input" type="password" placeholder="Mot de passe">
+      <button class="primary-btn" onclick="loginDemo()">Se connecter</button>
+      <div class="login-demo">
+        Démo technicien : tech@demo.fr / 1234<br>
+        Démo client : client@demo.fr / 1234
+      </div>
     </div>
   </div>
-</div>
+
   <div id="app" style="display:none;">
-
     <div class="hdr" id="mainHeader">
-  <img src="https://i.imgur.com/1ZFTLIo.png" class="logo" alt="Clarity Systems">
-
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span class="badge" id="badge"></span>
-
-    <button onclick="logout()" class="logout-btn">
-      Déconnexion
-    </button>
-  </div>
-</div>
-
+      <img src="https://i.imgur.com/1ZFTLIo.png" class="logo" alt="Clarity Systems">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="badge" id="badge"></span>
+        <button onclick="logout()" class="logout-btn">Déconnexion</button>
+      </div>
+    </div>
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="today">Aujourd'hui</div>
       <div class="tab" data-tab="planning">Planning</div>
       <div class="tab" data-tab="history">Historique</div>
     </div>
-
     <div id="content"></div>
-
   </div>
 </div>
 
@@ -752,7 +344,9 @@ const HIST_URL = "https://hook.eu1.make.com/6etkl3pphxxwmly0jha93m246am0d2n8";
 let items = [], hist = [], currentTab = "today";
 let selectedItem = null, pendingId = null;
 let reportLinesById = {}, reportClosedById = {}, tempLine = {}, reportStep = 1;
+let currentRole = null;
 
+// ─── TABS ────────────────────────────────────────────────────────────────────
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => {
     currentTab = t.dataset.tab;
@@ -764,6 +358,7 @@ document.querySelectorAll(".tab").forEach(t => {
   });
 });
 
+// ─── DATA ────────────────────────────────────────────────────────────────────
 async function loadData() {
   showLoader();
   try { items = await (await fetch(GET_URL)).json(); } catch { items = []; }
@@ -772,6 +367,7 @@ async function loadData() {
   render();
 }
 
+// ─── TECH RENDER ─────────────────────────────────────────────────────────────
 function render() {
   const c = document.getElementById("content");
   c.innerHTML = "";
@@ -786,7 +382,6 @@ function render() {
     const todayL = all.filter(i => midnight(i.date).getTime() === today.getTime());
     if (late.length)   { c.innerHTML += `<div class="slabel">En retard</div>`; late.forEach((item,i) => c.innerHTML += listCard(item,i,"red")); }
     if (todayL.length) { c.innerHTML += `<div class="slabel">Aujourd'hui</div>`; todayL.forEach((item,i) => c.innerHTML += listCard(item,i,"orange")); }
-
   } else if (currentTab === "planning") {
     const sorted = [...items].sort((a,b) => new Date(a.date)-new Date(b.date));
     if (!sorted.length) { c.innerHTML = empty("📅","Planning vide","Aucune intervention planifiée."); return; }
@@ -796,7 +391,6 @@ function render() {
       const cls = d < today ? "red" : d.getTime() === today.getTime() ? "orange" : "ok";
       c.innerHTML += listCard(item,i,cls);
     });
-
   } else {
     const sorted = [...hist].sort((a,b) => new Date(b.date)-new Date(a.date));
     if (!sorted.length) { c.innerHTML = empty("🗂️","Aucun historique","Les interventions terminées apparaîtront ici."); return; }
@@ -878,7 +472,6 @@ function renderDetail(item) {
       <div class="detail-title">Intervention</div>
       <div class="detail-sub">${isPlanning ? "Planning" : "Fiche du jour"}</div>
     </div>
-
     <div class="main-intervention">
       <div class="icon">📅</div>
       <div class="info">
@@ -890,7 +483,6 @@ function renderDetail(item) {
         ${reportStatus}
       </div>
     </div>
-
     <div class="action-grid">
       <button class="action ${hasPhone ? "" : "disabled"}" onclick="${hasPhone ? `callClient('${escapeJs(phone)}')` : `toast('Téléphone non renseigné')`}">
         <div class="action-ico">📞</div><span>Appeler</span>
@@ -906,7 +498,6 @@ function renderDetail(item) {
       </button>
       ${workButtons}
     </div>
-
     <div class="bottom-actions">
       ${closeButton}
       <button class="secondary-btn" onclick="openRescheduleSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Reporter</button>
@@ -920,14 +511,12 @@ function renderHistoryDetail(item) {
   const hasPhone = String(phone).trim().length > 0;
   const rapportUrl = item.rapport_pdf_url || item.rapport_url || "";
   const factureUrl = item.facture_pdf_url || item.facture_url || "";
-
   document.getElementById("content").innerHTML = `
     <div class="detail-top">
       <div class="back" onclick="backToList()">Retour</div>
       <div class="detail-title">Historique</div>
       <div class="detail-sub">Intervention terminée</div>
     </div>
-
     <div class="main-intervention">
       <div class="icon">✅</div>
       <div class="info">
@@ -939,7 +528,6 @@ function renderHistoryDetail(item) {
         <div class="status-pill">✅ Intervention clôturée</div>
       </div>
     </div>
-
     <div class="action-grid">
       <button class="action ${hasPhone ? "" : "disabled"}" onclick="${hasPhone ? `callClient('${escapeJs(phone)}')` : `toast('Téléphone non renseigné')`}">
         <div class="action-ico">📞</div><span>Appeler</span>
@@ -962,19 +550,15 @@ function renderHistoryDetail(item) {
     </div>`;
 }
 
-function backToList() {
-  selectedItem = null;
-  showMainBars();
-  render();
-}
+function backToList() { selectedItem = null; showMainBars(); render(); }
 
+// ─── RAPPORT ─────────────────────────────────────────────────────────────────
 function openReportPage() {
   if (!selectedItem) return;
   hideMainBars();
   const id = selectedItem.id;
   const lines = reportLinesById[id] || [];
   const reportDone = reportClosedById[id] === true;
-
   document.getElementById("content").innerHTML = `
     <div class="detail-top">
       <div class="back" onclick="renderDetail(selectedItem)">Retour</div>
@@ -1006,7 +590,6 @@ function openReportPage() {
 }
 
 function startReportLine() { tempLine = {}; reportStep = 1; renderReportStep(); }
-
 function renderReportStep() {
   if (reportStep === 1) renderChoiceStep("Équipement", ["Extincteur","BAES","Alarme incendie","RIA","Désenfumage","Porte coupe-feu","Détecteur","Signalétique","Autre"], "equipement");
   if (reportStep === 2) renderChoiceStep("Action réalisée", ["Vérification","Pose","Remplacement","Maintenance","Recharge","Dépose","Mise en service","Réparation","Contrôle visuel"], "action");
@@ -1019,264 +602,330 @@ function renderReportStep() {
         <div class="detail-sub">Optionnel</div>
       </div>
       <textarea id="comment" placeholder="Exemple : RAS, accès impossible, remplacement conseillé…"></textarea>
-      <div class="bottom-actions">
-        <button class="primary-btn" onclick="saveReportLine()">Ajouter au rapport</button>
-      </div>`;
-  }
-}
 
+```
+  <div class="bottom-actions">
+    <button class="primary-btn" onclick="saveReportLine()">Ajouter au rapport</button>
+  </div>`;
+```
+
+}
+}
 function renderChoiceStep(title, options, key) {
-  document.getElementById("content").innerHTML = `
-    <div class="detail-top">
-      <div class="back" onclick="backReportStep()">Retour</div>
-      <div class="detail-title">${title}</div>
-    </div>
-    <div class="action-grid">
-      ${options.map(o => `
-        <button class="action" onclick="selectReportValue('${key}','${escapeJs(o)}')">
-          <span style="font-size:13px;color:var(--label);font-weight:700">${safe(o)}</span>
-        </button>
-      `).join("")}
-    </div>`;
+document.getElementById(“content”).innerHTML = `<div class="detail-top"> <div class="back" onclick="backReportStep()">Retour</div> <div class="detail-title">${title}</div> </div> <div class="action-grid"> ${options.map(o =>`
+<button class="action" onclick="selectReportValue('${key}','${escapeJs(o)}')">
+<span style="font-size:13px;color:var(--label);font-weight:700">${safe(o)}</span>
+</button>
+`).join("")} </div>`;
 }
-
 function selectReportValue(key, value) { tempLine[key] = value; reportStep++; renderReportStep(); }
-
-function backReportStep() {
-  if (reportStep <= 1) { openReportPage(); return; }
-  reportStep--;
-  renderReportStep();
-}
-
+function backReportStep() { if (reportStep <= 1) { openReportPage(); return; } reportStep–; renderReportStep(); }
 function saveReportLine() {
-  const id = selectedItem.id;
-  if (!reportLinesById[id]) reportLinesById[id] = [];
-  tempLine.commentaire = document.getElementById("comment").value || "";
-  reportLinesById[id].push({...tempLine});
-  toast("✅ Tâche ajoutée");
-  openReportPage();
+const id = selectedItem.id;
+if (!reportLinesById[id]) reportLinesById[id] = [];
+tempLine.commentaire = document.getElementById(“comment”).value || “”;
+reportLinesById[id].push({…tempLine});
+toast(“✅ Tâche ajoutée”);
+openReportPage();
 }
-
-function removeReportLine(index) {
-  const id = selectedItem.id;
-  if (!reportLinesById[id]) return;
-  reportLinesById[id].splice(index, 1);
-  openReportPage();
-}
-
+function removeReportLine(index) { const id = selectedItem.id; if (!reportLinesById[id]) return; reportLinesById[id].splice(index, 1); openReportPage(); }
 function closeReport() {
-  const id = selectedItem.id;
-  if (!(reportLinesById[id] || []).length) { toast("Ajoutez au moins une tâche"); return; }
-  reportClosedById[id] = true;
-  toast("✅ Rapport clôturé");
-  renderDetail(selectedItem);
+const id = selectedItem.id;
+if (!(reportLinesById[id] || []).length) { toast(“Ajoutez au moins une tâche”); return; }
+reportClosedById[id] = true;
+toast(“✅ Rapport clôturé”);
+renderDetail(selectedItem);
 }
-
 function tryCloseIntervention(id) {
-  if (!reportClosedById[id]) { toast("Veuillez clôturer le rapport avant"); return; }
-  openCloseSheet(id, selectedItem.name || selectedItem.entreprise || "Client");
+if (!reportClosedById[id]) { toast(“Veuillez clôturer le rapport avant”); return; }
+openCloseSheet(id, selectedItem.name || selectedItem.entreprise || “Client”);
 }
-
-function openCloseSheet(id, name) {
-  pendingId = id;
-  openSheet(name, "Clôturer cette intervention ?",
-    `<button class="sbtn confirm" onclick="confirmClose()">✓ Clôturer l'intervention</button>`);
-}
-
+function openCloseSheet(id, name) { pendingId = id; openSheet(name, “Clôturer cette intervention ?”,`<button class="sbtn confirm" onclick="confirmClose()">✓ Clôturer l'intervention</button>`); }
 async function confirmClose() {
-  try {
-    await fetch(POST_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: pendingId, rapport: reportLinesById[pendingId] || [] })
-    });
-  } catch {}
-  closeSheet();
-  toast("✅ Intervention clôturée");
-  selectedItem = null;
-  setTimeout(() => { showMainBars(); loadData(); }, 420);
+try { await fetch(POST_URL, { method:“POST”, headers:{“Content-Type”:“application/json”}, body:JSON.stringify({ id:pendingId, rapport:reportLinesById[pendingId]||[] }) }); } catch {}
+closeSheet();
+toast(“✅ Intervention clôturée”);
+selectedItem = null;
+setTimeout(() => { showMainBars(); loadData(); }, 420);
 }
-
-function openRescheduleSheet(id, name) {
-  pendingId = id;
-  openSheet(name, "Envoyer un lien de reprogrammation au client ?",
-    `<button class="sbtn confirm" onclick="fakeAction('reporter')">Envoyer le lien de RDV</button>`);
-}
-
-function openCancelSheet(id, name) {
-  pendingId = id;
-  openSheet(name, "Que voulez-vous faire ?",
-    `<button class="sbtn warn" onclick="fakeAction('annuler_reprogrammer')">Annuler et reprogrammer</button>
-     <button class="sbtn danger" onclick="fakeAction('annuler_definitif')">Annuler définitivement</button>`);
-}
-
+function openRescheduleSheet(id, name) { pendingId = id; openSheet(name, “Envoyer un lien de reprogrammation au client ?”,`<button class="sbtn confirm" onclick="fakeAction('reporter')">Envoyer le lien de RDV</button>`); }
+function openCancelSheet(id, name) { pendingId = id; openSheet(name, “Que voulez-vous faire ?”,`<button class="sbtn warn" onclick="fakeAction('annuler_reprogrammer')">Annuler et reprogrammer</button><button class="sbtn danger" onclick="fakeAction('annuler_definitif')">Annuler définitivement</button>`); }
 function fakeAction(action) {
-  closeSheet();
-  if (action === "reporter") toast("Lien de RDV bientôt connecté à Make");
-  if (action === "annuler_reprogrammer") toast("Annulation + reprogrammation bientôt connectées");
-  if (action === "annuler_definitif") toast("Annulation définitive bientôt connectée");
+closeSheet();
+if (action === “reporter”) toast(“Lien de RDV bientôt connecté à Make”);
+if (action === “annuler_reprogrammer”) toast(“Annulation + reprogrammation bientôt connectées”);
+if (action === “annuler_definitif”) toast(“Annulation définitive bientôt connectée”);
 }
 
 function openSheet(name, sub, buttonsHtml) {
-  document.getElementById("sname").textContent = name;
-  document.getElementById("ssub").textContent = sub;
-  document.getElementById("sheetButtons").innerHTML = buttonsHtml;
-  document.getElementById("backdrop").classList.add("open");
+document.getElementById(“sname”).textContent = name;
+document.getElementById(“ssub”).textContent = sub;
+document.getElementById(“sheetButtons”).innerHTML = buttonsHtml;
+document.getElementById(“backdrop”).classList.add(“open”);
+}
+function closeSheet() { document.getElementById(“backdrop”).classList.remove(“open”); document.getElementById(“sheetButtons”).innerHTML = “”; }
+
+// ─── CLIENT DEMO ─────────────────────────────────────────────────────────────
+
+const CLIENT_NAME = “Ags-incendie”;
+
+const DEMO_DOCUMENTS = [
+{ ico:“📜”, name:“Contrat de maintenance”, date:“15 Jan 2025”, type:“PDF” },
+{ ico:“📋”, name:“Attestation vérification 2024”, date:“12 Nov 2024”, type:“PDF” },
+{ ico:“📄”, name:“Conditions générales”, date:“01 Jan 2024”, type:“PDF” },
+{ ico:“🔖”, name:“Bon de commande #2024-087”, date:“22 Oct 2024”, type:“PDF” },
+];
+
+const DEMO_RAPPORTS = [
+{ ico:“✅”, name:“Vérification extincteurs”, date:“12 Nov 2024”, tech:“Laurent M.”, statut:“ok” },
+{ ico:“✅”, name:“Contrôle BAES”, date:“03 Sep 2024”, tech:“Thomas R.”, statut:“ok” },
+{ ico:“⚠️”, name:“Maintenance alarme incendie”, date:“18 Juil 2024”, tech:“Laurent M.”, statut:“warn” },
+];
+
+const DEMO_REGISTRE = [
+{ ico:“🧯”, name:“Extincteur CO₂ – Local technique”, serie:“EXT-001”, verif:“Avr 2025”, statut:“ok” },
+{ ico:“🧯”, name:“Extincteur poudre – Hall entrée”, serie:“EXT-002”, verif:“Avr 2025”, statut:“ok” },
+{ ico:“🧯”, name:“Extincteur eau – Bureau R+1”, serie:“EXT-003”, verif:“Avr 2025”, statut:“ok” },
+{ ico:“💡”, name:“BAES – Couloir RDC”, serie:“BAE-001”, verif:“Nov 2024”, statut:“warn” },
+{ ico:“💡”, name:“BAES – Escalier principal”, serie:“BAE-002”, verif:“Nov 2024”, statut:“warn” },
+{ ico:“🔔”, name:“Détecteur fumée – Cuisine”, serie:“DET-001”, verif:“Juil 2024”, statut:“danger” },
+];
+
+const DEMO_ECHEANCES = [
+{ ico:“🧯”, name:“Vérification extincteurs”, echeance:“Avr 2025”, jours:+45, statut:“ok” },
+{ ico:“💡”, name:“Contrôle BAES”, echeance:“Nov 2024”, jours:-185, statut:“danger” },
+{ ico:“🔔”, name:“Essai alarme incendie”, echeance:“Mar 2025”, jours:+20, statut:“warn” },
+{ ico:“📋”, name:“Registre de sécurité”, echeance:“Jan 2026”, jours:+260, statut:“ok” },
+];
+
+const DEMO_INTERVENTIONS = [
+{ ico:“✅”, name:“Vérification annuelle extincteurs”, date:“12 Nov 2024”, tech:“Laurent M.”, adresse:“Marseille 13008”, statut:“Clôturée” },
+{ ico:“✅”, name:“Pose BAES supplémentaire”, date:“03 Sep 2024”, tech:“Thomas R.”, adresse:“Marseille 13008”, statut:“Clôturée” },
+{ ico:“✅”, name:“Contrôle alarme incendie”, date:“18 Juil 2024”, tech:“Laurent M.”, adresse:“Marseille 13008”, statut:“Clôturée” },
+];
+
+function renderClientDemoHome() {
+hideMainBars();
+document.getElementById(“content”).innerHTML = ` <div class="detail-top"> <div class="detail-title">Espace client</div> <div class="detail-sub">Démonstration</div> </div> <div class="main-intervention"> <div class="icon">🏢</div> <div class="info"> <div class="main-title">${CLIENT_NAME}</div> <div class="main-line">Bienvenue dans votre espace client sécurisé.</div> <div class="main-line">Documents, rapports, registre et abonnements regroupés ici.</div> </div> </div> <div class="action-grid"> <button class="action" onclick="clientPage('documents')"> <div class="action-ico">📄</div><span>Documents</span> </button> <button class="action" onclick="clientPage('rapports')"> <div class="action-ico">📋</div><span>Rapports</span> </button> <button class="action" onclick="clientPage('registre')"> <div class="action-ico">📚</div><span>Registre</span> </button> <button class="action" onclick="clientPage('abonnements')"> <div class="action-ico">💳</div><span>Abonnements</span> </button> <button class="action" onclick="clientPage('echeances')"> <div class="action-ico">📅</div><span>Échéances</span> </button> <button class="action" onclick="clientPage('rendezvous')"> <div class="action-ico">🕒</div><span>Rendez-vous</span> </button> </div> <div class="bottom-actions"> <button class="danger-btn" onclick="logout()">Déconnexion</button> </div>`;
 }
 
-function closeSheet() {
-  document.getElementById("backdrop").classList.remove("open");
-  document.getElementById("sheetButtons").innerHTML = "";
+function clientPage(page) {
+hideMainBars();
+const c = document.getElementById(“content”);
+
+if (page === “documents”) {
+c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Documents</div> <div class="detail-sub">${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_DOCUMENTS.length} document${DEMO_DOCUMENTS.length>1?"s":""}</div> ${DEMO_DOCUMENTS.map(d =>`
+<div class="card blue" onclick="toast('Ouverture du document…')">
+<div class="icon">${d.ico}</div>
+<div class="info">
+<div class="cname">${d.name}</div>
+<div class="cdate">${d.date} · ${d.type}</div>
+</div>
+<div class="chev">↓</div>
+</div>
+`).join("")}`;
 }
 
-function showMainBars() {
-  document.getElementById("mainHeader").style.display = "flex";
-  document.getElementById("tabs").style.display = "flex";
+else if (page === “rapports”) {
+c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Rapports</div> <div class="detail-sub">${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_RAPPORTS.length} rapport${DEMO_RAPPORTS.length>1?"s":""}</div> ${DEMO_RAPPORTS.map(r =>`
+<div class="card ${r.statut === 'ok' ? 'ok' : 'orange'}" onclick="toast('Ouverture du rapport…')">
+<div class="icon">${r.ico}</div>
+<div class="info">
+<div class="cname">${r.name}</div>
+<div class="cdate">${r.date} · ${r.tech}</div>
+</div>
+<div class="chev">↓</div>
+</div>
+`).join("")} <div class="slabel">Suivi des interventions</div> ${DEMO_INTERVENTIONS.map(i => `
+<div class="card ok">
+<div class="icon">${i.ico}</div>
+<div class="info">
+<div class="cname">${i.name}</div>
+<div class="cdate">${i.date} · ${i.tech}</div>
+<div class="cdate">${i.adresse}</div>
+</div>
+<span class="reg-pill ok">${i.statut}</span>
+</div>
+`).join("")}`;
 }
-function hideMainBars() {
-  document.getElementById("mainHeader").style.display = "none";
-  document.getElementById("tabs").style.display = "none";
+
+else if (page === “registre”) {
+c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Registre</div> <div class="detail-sub">Registre dématérialisé · ${CLIENT_NAME}</div> </div> <div class="slabel">${DEMO_REGISTRE.length} équipements</div> ${DEMO_REGISTRE.map(r =>`
+<div class="reg-row">
+<div class="reg-ico">${r.ico}</div>
+<div class="reg-info">
+<div class="reg-name">${r.name}</div>
+<div class="reg-meta">N° ${r.serie} · Prochaine vérif. ${r.verif}</div>
+</div>
+<span class="reg-pill ${r.statut}">${r.statut === ‘ok’ ? ‘À jour’ : r.statut === ‘warn’ ? ‘Proche’ : ‘Dépassé’}</span>
+</div>
+`).join("")} <div style="margin-top:8px"> <button class="secondary-btn" onclick="toast('Téléchargement du registre PDF…')">📥 Télécharger le registre PDF</button> </div>`;
 }
-function showLoader() {
-  document.getElementById("content").innerHTML = `<div class="loader"><div class="spinner"></div></div>`;
+
+else if (page === “echeances”) {
+c.innerHTML = `<div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Échéances</div> <div class="detail-sub">Suivi des vérifications · ${CLIENT_NAME}</div> </div> <div class="slabel">Vérifications réglementaires</div> ${DEMO_ECHEANCES.map(e =>`
+<div class="card ${e.statut === 'ok' ? 'ok' : e.statut === 'warn' ? 'orange' : 'red'}">
+<div class="icon">${e.ico}</div>
+<div class="info">
+<div class="cname">${e.name}</div>
+<div class="cdate">Échéance : ${e.echeance}</div>
+<div class="cdate">${e.jours > 0 ? `Dans ${e.jours} jours` : `Dépassée de ${Math.abs(e.jours)} jours`}</div>
+</div>
+<span class="reg-pill ${e.statut}">${e.statut === ‘ok’ ? ‘À jour’ : e.statut === ‘warn’ ? ‘Bientôt’ : ‘Urgent’}</span>
+</div>
+`).join("")} <div style="margin-top:8px"> <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Prendre rendez-vous</button> </div>`;
 }
-function empty(ico, title, sub = "") {
-  return `<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`;
+
+else if (page === “abonnements”) {
+c.innerHTML = `
+<div class="detail-top">
+<div class="back" onclick="renderClientDemoHome()">Retour</div>
+<div class="detail-title">Abonnements</div>
+<div class="detail-sub">${CLIENT_NAME}</div>
+</div>
+<div class="slabel">Choisissez votre formule</div>
+
+```
+  <div class="abon-card" onclick="selectAbon('T1', this)">
+    <div class="abon-header">
+      <div class="abon-title">Formule T1</div>
+    </div>
+    <div class="abon-price">8€ <span>/ mois</span></div>
+    <div class="abon-desc">Pour les petits locaux avec un seul point d'extinction.</div>
+    <div class="abon-features">
+      <div class="abon-feat">1 extincteur inclus</div>
+      <div class="abon-feat">Vérification annuelle</div>
+      <div class="abon-feat">Rapport d'intervention</div>
+      <div class="abon-feat">Accès espace client</div>
+    </div>
+  </div>
+
+  <div class="abon-card popular" onclick="selectAbon('T2', this)">
+    <div class="abon-header">
+      <div class="abon-title">Formule T2</div>
+      <div class="abon-badge">⭐ POPULAIRE</div>
+    </div>
+    <div class="abon-price">15€ <span>/ mois</span></div>
+    <div class="abon-desc">Pour les locaux avec plusieurs zones à sécuriser.</div>
+    <div class="abon-features">
+      <div class="abon-feat">2 extincteurs inclus</div>
+      <div class="abon-feat">Vérification annuelle</div>
+      <div class="abon-feat">Rapport d'intervention</div>
+      <div class="abon-feat">Accès espace client</div>
+      <div class="abon-feat">Rappels automatiques</div>
+    </div>
+  </div>
+
+  <div class="bottom-actions" id="abonActions" style="display:none">
+    <button class="success-btn" onclick="goToPayment()">💳 Souscrire et payer en ligne</button>
+  </div>`;
+```
+
 }
+
+else if (page === “rendezvous”) {
+c.innerHTML = ` <div class="detail-top"> <div class="back" onclick="renderClientDemoHome()">Retour</div> <div class="detail-title">Rendez-vous</div> <div class="detail-sub">Prise de RDV · ${CLIENT_NAME}</div> </div> <div class="main-intervention" style="margin-bottom:20px"> <div class="icon">📅</div> <div class="info"> <div class="main-title">Planifier une intervention</div> <div class="main-line">Choisissez le type d'intervention et vos disponibilités.</div> </div> </div> <div class="slabel">Type d'intervention</div> <select class="rdv-select" id="rdvType"> <option value="">-- Sélectionner --</option> <option>Vérification extincteurs</option> <option>Contrôle BAES</option> <option>Essai alarme incendie</option> <option>Maintenance générale</option> <option>Pose de matériel</option> <option>Autre</option> </select> <div class="slabel">Date souhaitée</div> <input class="rdv-input" type="date" id="rdvDate"> <div class="slabel">Créneau préféré</div> <select class="rdv-select" id="rdvCreneau"> <option value="">-- Sélectionner --</option> <option>Matin (8h–12h)</option> <option>Après-midi (13h–17h)</option> <option>Toute la journée</option> </select> <div class="slabel">Commentaire (optionnel)</div> <textarea placeholder="Précisions sur l'accès, le site, le matériel…" id="rdvComment" style="min-height:90px"></textarea> <div class="bottom-actions"> <button class="primary-btn" onclick="submitRdv()">📅 Envoyer la demande de RDV</button> </div>`;
+
+```
+// Pré-remplir la date avec demain
+const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+document.getElementById("rdvDate").value = tomorrow.toISOString().split("T")[0];
+```
+
+}
+}
+
+let selectedAbon = null;
+function selectAbon(type, el) {
+selectedAbon = type;
+document.querySelectorAll(”.abon-card”).forEach(c => c.style.borderColor = “transparent”);
+el.style.borderColor = “var(–accent)”;
+document.getElementById(“abonActions”).style.display = “flex”;
+}
+
+function goToPayment() {
+if (!selectedAbon) { toast(“Veuillez choisir une formule”); return; }
+hideMainBars();
+const price = selectedAbon === “T1” ? “8€/mois” : “15€/mois”;
+const mats   = selectedAbon === “T1” ? “1 extincteur” : “2 extincteurs”;
+document.getElementById(“content”).innerHTML = ` <div class="detail-top"> <div class="back" onclick="clientPage('abonnements')">Retour</div> <div class="detail-title">Paiement</div> <div class="detail-sub">Formule ${selectedAbon} · ${price}</div> </div> <div class="main-intervention"> <div class="icon">💳</div> <div class="info"> <div class="main-title">Formule ${selectedAbon}</div> <div class="main-line">${mats} inclus</div> <div class="main-line main-date">${price}</div> </div> </div> <div class="slabel">Informations de paiement</div> <input class="rdv-input" placeholder="Numéro de carte" value="•••• •••• •••• 4242"> <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"> <input class="rdv-input" style="margin:0" placeholder="MM/AA" value="12/27"> <input class="rdv-input" style="margin:0" placeholder="CVC" value="•••"> </div> <input class="rdv-input" placeholder="Titulaire de la carte" value="AGS Incendie"> <div class="bottom-actions" style="margin-top:8px"> <button class="success-btn" onclick="confirmPayment()">🔒 Confirmer le paiement · ${price}</button> </div>`;
+}
+
+function confirmPayment() {
+hideMainBars();
+document.getElementById(“content”).innerHTML = ` <div class="confirm-screen"> <span class="confirm-ico">🎉</span> <div class="confirm-title">Abonnement activé !</div> <div class="confirm-sub"> Votre formule ${selectedAbon} est active.<br> Une intervention de pose sera planifiée automatiquement dans votre planning. </div> <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px"> <button class="primary-btn" onclick="clientPage('rendezvous')">📅 Planifier la pose maintenant</button> <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button> </div> </div>`;
+}
+
+function submitRdv() {
+const type    = document.getElementById(“rdvType”).value;
+const date    = document.getElementById(“rdvDate”).value;
+const creneau = document.getElementById(“rdvCreneau”).value;
+if (!type || !date || !creneau) { toast(“Veuillez remplir tous les champs”); return; }
+const dateF = new Date(date).toLocaleDateString(“fr-FR”, { weekday:“long”, day:“numeric”, month:“long” });
+hideMainBars();
+document.getElementById(“content”).innerHTML = ` <div class="confirm-screen"> <span class="confirm-ico">✅</span> <div class="confirm-title">Demande envoyée !</div> <div class="confirm-sub"> Votre demande de RDV pour<br> <strong>${type}</strong><br> le <strong>${dateF}</strong> (${creneau})<br> a bien été transmise.<br><br> L'intervention sera ajoutée au planning du technicien dès confirmation. </div> <div style="margin-top:24px"> <button class="secondary-btn" onclick="renderClientDemoHome()">Retour à l'accueil</button> </div> </div>`;
+}
+
+// ─── SHARED UTILS ────────────────────────────────────────────────────────────
+function showMainBars() { document.getElementById(“mainHeader”).style.display=“flex”; document.getElementById(“tabs”).style.display=“flex”; }
+function hideMainBars() { document.getElementById(“mainHeader”).style.display=“none”; document.getElementById(“tabs”).style.display=“none”; }
+function showLoader() { document.getElementById(“content”).innerHTML=`<div class="loader"><div class="spinner"></div></div>`; }
+function empty(ico,title,sub=””) { return `<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`; }
 
 let tt;
 function toast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  clearTimeout(tt);
-  tt = setTimeout(() => el.classList.remove("show"), 2300);
+const el = document.getElementById(“toast”);
+el.textContent = msg;
+el.classList.add(“show”);
+clearTimeout(tt);
+tt = setTimeout(() => el.classList.remove(“show”), 2300);
 }
 
-function callClient(phone) { window.location.href = "tel:" + phone; }
-function openMaps(adresse) {
-  window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(adresse), "_blank");
-}
-
+function callClient(phone) { window.location.href = “tel:” + phone; }
+function openMaps(adresse) { window.open(“https://www.google.com/maps/search/?api=1&query=”+encodeURIComponent(adresse),”_blank”); }
 function updateBadge() {
-  const today = midnight(new Date());
-  const n = items.filter(i => midnight(i.date) < today).length;
-  const b = document.getElementById("badge");
-  b.textContent = n + " en retard";
-  b.classList.toggle("on", n > 0);
+const today = midnight(new Date());
+const n = items.filter(i => midnight(i.date) < today).length;
+const b = document.getElementById(“badge”);
+b.textContent = n + “ en retard”;
+b.classList.toggle(“on”, n > 0);
 }
-function midnight(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
-function fmtDate(str) {
-  const d = new Date(str);
-  const s = d.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-function fmtHeure(str) {
-  return new Date(str).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
-}
-function getAdresseSansCP(adresse) {
-  return String(adresse||"").replace(/\s+\d{5}\s+.+$/i, "");
-}
-function getCodePostalVille(adresse) {
-  const m = String(adresse||"").match(/(\d{5})\s+(.+)$/);
-  return m ? `${m[1]} ${m[2]}` : "";
-}
-function escapeJs(v) {
-  return String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;");
-}
-function safe(v) {
-  return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
+function midnight(d) { const x=new Date(d); x.setHours(0,0,0,0); return x; }
+function fmtDate(str) { const d=new Date(str); const s=d.toLocaleDateString(“fr-FR”,{weekday:“long”,day:“numeric”,month:“long”}); return s.charAt(0).toUpperCase()+s.slice(1); }
+function fmtHeure(str) { return new Date(str).toLocaleTimeString(“fr-FR”,{hour:“2-digit”,minute:“2-digit”}); }
+function getAdresseSansCP(adresse) { return String(adresse||””).replace(/\s+\d{5}\s+.+$/i,””); }
+function getCodePostalVille(adresse) { const m=String(adresse||””).match(/(\d{5})\s+(.+)$/); return m?`${m[1]} ${m[2]}`:””; }
+function escapeJs(v) { return String(v||””).replace(/\/g,”\\”).replace(/’/g,”\’”).replace(/”/g,”"”); }
+function safe(v) { return String(v||””).replace(/&/g,”&”).replace(/</g,”<”).replace(/>/g,”>”); }
 
+// ─── LOGIN ────────────────────────────────────────────────────────────────────
 function loginDemo() {
-  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const password = document.getElementById("loginPassword").value.trim();
-
-  if (email === "tech@demo.fr" && password === "1234") {
-    localStorage.setItem("demoRole", "technicien");
-    startApp("technicien");
-    return;
-  }
-
-  if (email === "client@demo.fr" && password === "1234") {
-    localStorage.setItem("demoRole", "client");
-    startApp("client");
-    return;
-  }
-
-  toast("Identifiants incorrects");
+const email    = document.getElementById(“loginEmail”).value.trim().toLowerCase();
+const password = document.getElementById(“loginPassword”).value.trim();
+if (email === “tech@demo.fr” && password === “1234”) { localStorage.setItem(“demoRole”,“technicien”); startApp(“technicien”); return; }
+if (email === “client@demo.fr” && password === “1234”) { localStorage.setItem(“demoRole”,“client”); startApp(“client”); return; }
+toast(“Identifiants incorrects”);
 }
 
 function startApp(role) {
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
-
-  if (role === "technicien") {
-    showMainBars();
-    loadData();
-  }
-
-  if (role === "client") {
-    hideMainBars();
-    renderClientDemoHome();
-  }
+currentRole = role;
+document.getElementById(“loginScreen”).style.display = “none”;
+document.getElementById(“app”).style.display = “flex”;
+if (role === “technicien”) { showMainBars(); loadData(); }
+if (role === “client”) { hideMainBars(); renderClientDemoHome(); }
 }
 
 function logout() {
-  localStorage.removeItem("demoRole");
-  selectedItem = null;
-  document.getElementById("app").style.display = "none";
-  document.getElementById("loginScreen").style.display = "flex";
+localStorage.removeItem(“demoRole”);
+selectedItem = null;
+currentRole = null;
+document.getElementById(“app”).style.display = “none”;
+document.getElementById(“loginScreen”).style.display = “flex”;
 }
 
-function renderClientDemoHome() {
-  document.getElementById("content").innerHTML = `
-    <div class="detail-top">
-      <div class="detail-title">Espace client</div>
-      <div class="detail-sub">Démonstration</div>
-    </div>
-
-    <div class="main-intervention">
-      <div class="icon">🏢</div>
-      <div class="info">
-        <div class="main-title">STIM</div>
-        <div class="main-line">Bienvenue dans votre espace client sécurisé.</div>
-        <div class="main-line">Documents, rapports, registre et abonnements seront regroupés ici.</div>
-      </div>
-    </div>
-
-    <div class="action-grid">
-      <button class="action" onclick="toast('Documents bientôt disponibles')">
-        <div class="action-ico">📄</div><span>Documents</span>
-      </button>
-      <button class="action" onclick="toast('Rapports bientôt disponibles')">
-        <div class="action-ico">📋</div><span>Rapports</span>
-      </button>
-      <button class="action" onclick="toast('Registre bientôt disponible')">
-        <div class="action-ico">📚</div><span>Registre</span>
-      </button>
-      <button class="action" onclick="toast('Abonnements bientôt disponibles')">
-        <div class="action-ico">💳</div><span>Abonnements</span>
-      </button>
-      <button class="action" onclick="toast('Vérifications bientôt disponibles')">
-        <div class="action-ico">📅</div><span>Échéances</span>
-      </button>
-      <button class="action" onclick="toast('Rendez-vous bientôt disponible')">
-        <div class="action-ico">🕒</div><span>Rendez-vous</span>
-      </button>
-    </div>
-
-    <div class="bottom-actions">
-      <button class="danger-btn" onclick="logout()">Déconnexion</button>
-    </div>
-  `;
-}
-
-const savedRole = localStorage.getItem("demoRole");
-
-if (savedRole) {
-  startApp(savedRole);
-}
+const savedRole = localStorage.getItem(“demoRole”);
+if (savedRole) startApp(savedRole);
 </script>
+
 </body>
 </html>
