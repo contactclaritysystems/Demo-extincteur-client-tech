@@ -42,7 +42,7 @@ body::before {
   pointer-events:none; z-index:0;
 }
 
-#wrap { display:flex; justify-content:center; min-height:100vh; position:relative; z-index:1; }
+#wrap { display:flex; justify-content:center; min-height:100vh; position:relative; z-index:1; flex-direction:column; align-items:center; }
 
 #app { width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; background:transparent; }
 
@@ -208,7 +208,7 @@ body::before {
 textarea { width:100%; min-height:130px; border:1.5px solid var(--sep); border-radius:var(--radius); padding:14px 16px; font-family:inherit; font-size:15px; font-weight:500; resize:none; outline:none; background:var(--surface-solid); box-shadow:var(--shadow-sm); color:var(--label); transition:border-color .18s; margin-bottom:14px; }
 textarea:focus { border-color:var(--accent); }
 
-.login-screen { width:100%; max-width:430px; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px; }
+.login-screen { width:100%; max-width:430px; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px; margin:0 auto; }
 .login-card { width:100%; background:var(--surface-solid); border-radius:var(--radius-lg); padding:30px 24px; box-shadow:var(--shadow-md); border:1px solid rgba(255,255,255,0.8); text-align:center; animation:cardIn .35s ease both; }
 .login-logo { height:74px; object-fit:contain; margin-bottom:20px; }
 .login-title { font-size:28px; font-weight:800; color:var(--label); letter-spacing:-0.03em; margin-bottom:6px; }
@@ -294,9 +294,9 @@ textarea:focus { border-color:var(--accent); }
       <img src="https://i.imgur.com/1ZFTLIo.png" class="login-logo" alt="Clarity Systems">
       <div class="login-title">Connexion</div>
       <div class="login-sub">Accédez à votre espace sécurisé</div>
-      <input id="loginEmail" class="login-input" type="email" placeholder="Email">
-      <input id="loginPassword" class="login-input" type="password" placeholder="Mot de passe">
-      <button class="primary-btn" onclick="loginDemo()">Se connecter</button>
+      <input id="loginEmail" class="login-input" type="email" placeholder="Email" onkeydown="if(event.key==='Enter')loginDemo()">
+      <input id="loginPassword" class="login-input" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')loginDemo()">
+      <button type="button" class="primary-btn" onclick="loginDemo()">Se connecter</button>
       <div class="login-demo">
         Démo technicien : tech@demo.fr / 1234<br>
         Démo client : client@demo.fr / 1234
