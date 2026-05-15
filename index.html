@@ -516,8 +516,8 @@ function renderDetail(item) {
     <div class="bottom-actions">
       ${closeButton}
      ${!reportedIds[item.id] ? `<button class="secondary-btn" onclick="openRescheduleSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Reporter</button>` : ''}
-    ${!cancelledIds[item.id] ? `<button class="danger-btn" onclick="openCancelSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Annuler</button>` : ''}   </div>
-    </div>`;
+   ${!cancelledIds[item.id] ? `<button class="danger-btn" onclick="openCancelSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Annuler</button>` : ''}
+    </div>`;
 }
 
 function renderHistoryDetail(item) {
