@@ -1334,7 +1334,7 @@ function callClient(phone) { window.location.href = "tel:" + phone; }
 function openMaps(adresse) { window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(adresse),"_blank"); }
 function updateBadge() {
   const today = midnight(new Date());
-  const n = items.filter(i => midnight(i.date) < today).length;
+  const n = items.filter(i => midnight(i.date) < today && !reportedIds[i.id]).length;
   const b = document.getElementById("badge");
   b.textContent = n + " en retard";
   b.classList.toggle("on", n > 0);
