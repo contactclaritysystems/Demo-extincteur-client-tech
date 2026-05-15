@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Clarity Systems</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -286,6 +286,13 @@ textarea:focus { border-color:var(--accent); }
 
 .card:nth-child(1){animation-delay:.03s}.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.09s}.card:nth-child(4){animation-delay:.12s}.card:nth-child(5){animation-delay:.15s}
 .action:nth-child(1){animation-delay:.05s}.action:nth-child(2){animation-delay:.09s}.action:nth-child(3){animation-delay:.13s}.action:nth-child(4){animation-delay:.17s}.action:nth-child(5){animation-delay:.21s}.action:nth-child(6){animation-delay:.25s}
+
+input,
+textarea,
+select {
+  font-size: 16px !important;
+}
+  
 </style>
 </head>
 
@@ -960,7 +967,7 @@ function renderFactureConfirm(item, email, numFacture, total, isDemo) {
 
 function openSheet(name, sub, buttonsHtml) {
   document.getElementById("sname").textContent = name;
-  document.getElementById("ssub").textContent = sub; le
+  document.getElementById("ssub").textContent = sub;
   document.getElementById("sheetButtons").innerHTML = buttonsHtml;
   document.getElementById("backdrop").classList.add("open");
 }
