@@ -670,7 +670,7 @@ function openRescheduleSheet(id, name) {
 function openCancelSheet(id, name) { pendingId = id; openSheet(name, "Que voulez-vous faire ?",`<button class="sbtn warn" onclick="fakeAction('annuler_reprogrammer')">Annuler et reprogrammer</button><button class="sbtn danger" onclick="fakeAction('annuler_definitif')">Annuler définitivement</button>`); }
 function fakeAction(action) {
   closeSheet();
-  if (action === "annuler_reprogrammer") toast("Annulation + reprogrammation bientôt connectées");
+ if (action === "annuler_reprogrammer") { cancelledIds[pendingId] = true; render(); toast("Intervention annulée"); }
 if (action === "annuler_definitif") { cancelledIds[pendingId] = true; render(); toast("Intervention annulée");
 }
 
