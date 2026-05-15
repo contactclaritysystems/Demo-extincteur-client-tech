@@ -674,8 +674,9 @@ function fakeAction(action) {
 
 // ─── REPORTER PAR EMAIL ───────────────────────────────────────────────────────
 async function confirmReporter() {
-  closeSheet();
-  reportedIds[selectedItem.id] = true;  if (!selectedItem) return;
+ closeSheet();
+if (!selectedItem) return;
+reportedIds[selectedItem.id] = true;
   const item = selectedItem;
   const email = item.email || item.mail || "";
 
