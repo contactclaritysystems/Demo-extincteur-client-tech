@@ -427,7 +427,7 @@ const ico = isReported ? "📤" : cls === "red" ? "⚠️" : cls === "orange" ? 
       <div class="icon">${ico}</div>
       <div class="info">
         <div class="cname">${safe(item.entreprise||"")} · ${safe(item.name||"")}</div>
-        <div class="cdate">${fmtDate(item.date)} · ${fmtHeure(item.date)}</div>
+       <div class="cdate">${isReported ? `<s>${fmtDate(item.date)}</s> · <span style="color:#9B59FF;font-weight:700">Reporté</span>` : `${fmtDate(item.date)} · ${fmtHeure(item.date)}`}</div>
         <div class="cdate">${safe(getAdresseSansCP(item.adresse))}</div>
         <div class="cdate">${safe(getCodePostalVille(item.adresse))}</div>
       </div>
@@ -488,10 +488,11 @@ function renderDetail(item) {
         <div class="main-line">${safe(item.name || "")}</div>
         <div class="main-line">${safe(getAdresseSansCP(item.adresse))}</div>
         <div class="main-line">${safe(getCodePostalVille(item.adresse))}</div>
-        <div class="main-line main-date">${fmtDate(item.date)} · ${fmtHeure(item.date)}</div>
-        ${reportStatus}
-      </div>
-    </div>
+       <div class="main-line main-date">${fmtDate(item.date)} · ${fmtHeure(item.date)}</div>
+        ${reportStatus}
+        ${reportedIds[item.id] ? '<div class="status-pill" style="background:rgba(155,89,255,0.12);color:#9B59FF;margin-top:8px">📤 Intervention reportée — email envoyé</div>' : ''}
+      </div>
+    </div>
     <div class="action-grid">
       <button class="action ${hasPhone ? "" : "disabled"}" onclick="${hasPhone ? `callClient('${escapeJs(phone)}')` : `toast('Téléphone non renseigné')`}">
         <div class="action-ico">📞</div><span>Appeler</span>
