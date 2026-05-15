@@ -495,9 +495,10 @@ function renderDetail(item) {
        <div class="main-line main-date">${fmtDate(item.date)} · ${fmtHeure(item.date)}</div>
         ${reportStatus}
         ${reportedIds[item.id] ? '<div class="status-pill" style="background:rgba(155,89,255,0.12);color:#9B59FF;margin-top:8px">📤 Intervention reportée — email envoyé</div>' : ''}
-        ${cancelledIds[item.id] ? '<div class="status-pill danger" style="margin-top:8px">❌ Intervention annulée</div>' : ''}
+      ${cancelledIds[item.id] ? '<div class="status-pill danger" style="margin-top:8px">❌ Intervention annulée</div>' : ''}
+      </div>
     </div>
-    <div class="action-grid">
+    <div class="action-grid">
       <button class="action ${hasPhone ? "" : "disabled"}" onclick="${hasPhone ? `callClient('${escapeJs(phone)}')` : `toast('Téléphone non renseigné')`}">
         <div class="action-ico">📞</div><span>Appeler</span>
       </button>
