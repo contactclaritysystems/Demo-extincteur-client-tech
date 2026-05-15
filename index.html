@@ -352,6 +352,7 @@ let items = [], hist = [], currentTab = "today";
 let selectedItem = null, pendingId = null;
 let reportLinesById = {}, reportClosedById = {}, tempLine = {}, reportStep = 1;
 let currentRole = null;
+let cancelledIds = {};
 
 // ─── TABS ────────────────────────────────────────────────────────────────────
 document.querySelectorAll(".tab").forEach(t => {
@@ -510,8 +511,8 @@ function renderDetail(item) {
     </div>
     <div class="bottom-actions">
       ${closeButton}
-      <button class="secondary-btn" onclick="openRescheduleSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Reporter</button>
-      <button class="danger-btn" onclick="openCancelSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Annuler</button>
+     ${!reportedIds[item.id] ? `<button class="secondary-btn" onclick="openRescheduleSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Reporter</button>` : ''}
+    ${!cancelledIds[item.id] ? `<button class="danger-btn" onclick="openCancelSheet('${escapeJs(item.id)}','${escapeJs(item.name||item.entreprise||"Client")}')">Annuler</button>` : ''}
     </div>`;
 }
 
@@ -670,7 +671,7 @@ function openCancelSheet(id, name) { pendingId = id; openSheet(name, "Que voulez
 function fakeAction(action) {
   closeSheet();
   if (action === "annuler_reprogrammer") toast("Annulation + reprogrammation bientôt connectées");
-  if (action === "annuler_definitif") toast("Annulation définitive bientôt connectée");
+if (action === "annuler_definitif") { cancelledIds[pendingId] = true; render(); toast("Intervention annulée");
 }
 
 // ─── REPORTER PAR EMAIL ───────────────────────────────────────────────────────
