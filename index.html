@@ -729,7 +729,6 @@ function renderReporterConfirm(item, email, isDemo) {
         <strong>${safe(email || "adresse non renseignée")}</strong><br><br>
         Le client pourra choisir une nouvelle date.<br>
         L'intervention sera mise à jour dans le planning.
-        ${isDemo ? '<br><br><em style="font-size:11px;color:var(--label3)">(Mode démo — connecte REPORTER_URL dans Make pour l\'envoi réel)</em>' : ""}
       </div>
       <div style="margin-top:24px">
         <button class="secondary-btn" onclick="backToList()">Retour au planning</button>
@@ -952,7 +951,6 @@ function renderFactureConfirm(item, email, numFacture, total, isDemo) {
         Facture de <strong>${total} € HT</strong> envoyée à<br>
         <strong>${safe(email || "adresse non renseignée")}</strong><br><br>
         ${safe(item?.entreprise || item?.name || "")}
-        ${isDemo ? '<br><br><em style="font-size:11px;color:var(--label3)">(Mode démo — connecte FACTURE_URL dans Make pour la vraie génération PDF)</em>' : ""}
       </div>
       <div style="margin-top:24px">
         <button class="secondary-btn" onclick="backToList()">Retour au planning</button>
@@ -962,7 +960,7 @@ function renderFactureConfirm(item, email, numFacture, total, isDemo) {
 
 function openSheet(name, sub, buttonsHtml) {
   document.getElementById("sname").textContent = name;
-  document.getElementById("ssub").textContent = sub;
+  document.getElementById("ssub").textContent = sub; le
   document.getElementById("sheetButtons").innerHTML = buttonsHtml;
   document.getElementById("backdrop").classList.add("open");
 }
